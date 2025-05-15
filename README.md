@@ -1,4 +1,4 @@
-# ObsidianIRC's Servers List
+# ObsidianIRC's Servers List (Not Ready Yet)
 This is where ObsidianIRC's server list on the 'Discover' reads from.
 
 ### So, how do you get listed? It's so easy!
