@@ -4,13 +4,13 @@
     description: "A cool place for tech talk, randomness and nerding.",
     server: "irc.h4ks.com",
     port: "8097",
-    obsidian: false,
+    obsidian: false
   },
   {
     name: "UnrealIRCd Support",
     description: "Get help with UnrealIRCd configuration, installation and usage.",
     server: "irc.unrealircd.org",
     port: "443",
-    obsidian: false,
-  },
+    obsidian: false
+  }
 ]
