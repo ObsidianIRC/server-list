@@ -3,7 +3,7 @@
     name: "h4ks.com",
     description: "A cool place for tech talk, randomness and nerding.",
     server: "irc.h4ks.com",
-    port: "8097", // websocket port
+    port: "8097",
     obsidian: false,
   },
   {
