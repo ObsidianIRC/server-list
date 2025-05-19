@@ -7,10 +7,17 @@
     "obsidian": false
   },
   {
-    "name": "UnrealIRCd Support",
+    "name": "UnrealIRCd Support & Test Network",
     "description": "Get help with UnrealIRCd configuration, installation and usage.",
     "server": "irc.unrealircd.org",
     "port": "443",
+    "obsidian": false
+  },
+  {
+    "name": "InspIRCd Test Network",
+    "description": "InspIRCd's Test Network for testing IRCv3 things.",
+    "server": "testnet.inspircd.org",
+    "port": "8097",
     "obsidian": false
   }
 ]
