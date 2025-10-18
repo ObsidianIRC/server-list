@@ -19,5 +19,12 @@
     "server": "testnet.inspircd.org",
     "port": "8097",
     "obsidian": false
+  },
+  {
+    "name": "Ergo Test Network",
+    "description": "Ergo's Test Network for testing IRCv3 things.",
+    "server": "testnet.ergo.chat",
+    "port": "8097",
+    "obsidian": false
   }
 ]
