@@ -26,5 +26,12 @@
     "server": "testnet.ergo.chat",
     "port": "8097",
     "obsidian": false
+  },
+  {
+    "name": "PTirc IRC Network",
+    "description": "Multi purpose chat network.",
+    "server": "irc.ptirc.org",
+    "port": "7666",
+    "obsidian": false
   }
 ]
