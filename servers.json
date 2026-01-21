@@ -33,5 +33,12 @@
     "server": "irc.zeolia.chat",
     "port": "8000",
     "obsidian": false
+  },
+  {
+    "name": "PTirc IRC Network",
+    "description": "Multi purpose chat network.",
+    "server": "irc.ptirc.org",
+    "port": "7666",
+    "obsidian": false
   }
 ]
