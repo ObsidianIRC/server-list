@@ -28,6 +28,13 @@
     "obsidian": false
   },
   {
+    "name": "zeolia.chat",
+    "description": "French small network, #eggdrop and #linux :)",
+    "server": "irc.zeolia.chat",
+    "port": "8000",
+    "obsidian": false
+  },
+  {
     "name": "PTirc IRC Network",
     "description": "Multi purpose chat network.",
     "server": "irc.ptirc.org",
