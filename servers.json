@@ -3,7 +3,7 @@
     "name": "h4ks.com",
     "description": "A cool place for tech talk, randomness and nerding.",
     "server": "irc.h4ks.com",
-    "port": "6697",
+    "port": "443",
     "obsidian": false
   },
   {
