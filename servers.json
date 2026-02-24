@@ -2,43 +2,43 @@
   {
     "name": "h4ks.com",
     "description": "A cool place for tech talk, randomness and nerding.",
-    "server": "irc.h4ks.com",
-    "port": "443",
+    "wss": "wss://irc.h4ks.com:443",
+    "ircs": "ircs://irc.h4ks.com:6697",
     "obsidian": false
   },
   {
     "name": "UnrealIRCd Support & Test Network",
     "description": "Get help with UnrealIRCd configuration, installation and usage.",
-    "server": "irc.unrealircd.org",
-    "port": "443",
+    "wss": "wss://irc.unrealircd.org:443",
+    "ircs": "ircs://irc.unrealircd.org:6697",
     "obsidian": false
   },
   {
     "name": "InspIRCd Test Network",
     "description": "InspIRCd's Test Network for testing IRCv3 things.",
-    "server": "testnet.inspircd.org",
-    "port": "8097",
+    "wss": "wss://testnet.inspircd.org:8097",
+    "ircs": "ircs://testnet.inspircd.org:6697",
     "obsidian": false
   },
   {
     "name": "Ergo Test Network",
     "description": "Ergo's Test Network for testing IRCv3 things.",
-    "server": "testnet.ergo.chat",
-    "port": "8097",
+    "wss": "wss://testnet.ergo.chat:8097",
+    "ircs": "ircs://testnet.ergo.chat:6697",
     "obsidian": false
   },
   {
     "name": "zeolia.chat",
     "description": "French small network, #eggdrop and #linux :)",
-    "server": "irc.zeolia.chat",
-    "port": "8000",
+    "wss": "wss://irc.zeolia.chat:8000",
+    "ircs": "ircs://irc.zeolia.chat:6697",
     "obsidian": false
   },
   {
     "name": "PTirc IRC Network",
     "description": "Multi purpose chat network.",
-    "server": "irc.ptirc.org",
-    "port": "7666",
+    "wss": "wss://irc.ptirc.org:7666",
+    "ircs": "ircs://irc.ptirc.org:6697",
     "obsidian": false
   }
 ]
