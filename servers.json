@@ -54,5 +54,5 @@
     "wss": "wss://chat.mirc.club:443",
     "ircs": "ircs://irc.mirc.club:6697",
     "obsidian": false
-  },
+  }
 ]
