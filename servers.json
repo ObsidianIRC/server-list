@@ -1,12 +1,5 @@
 [
   {
-    "name": "mIRCClub",
-    "description": "We are more than just a server.",
-    "wss": "wss://chat.mirc.club:443",
-    "ircs": "ircs://irc.mirc.club:6697",
-    "obsidian": false
-  },
-  {
     "name": "h4ks.com",
     "description": "A cool place for tech talk, randomness and nerding.",
     "wss": "wss://irc.h4ks.com:443",
@@ -46,6 +39,13 @@
     "description": "Multi purpose chat network.",
     "wss": "wss://irc.ptirc.org:7666",
     "ircs": "ircs://irc.ptirc.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "mIRCClub",
+    "description": "We are more than just a server.",
+    "wss": "wss://chat.mirc.club:443",
+    "ircs": "ircs://irc.mirc.club:6697",
     "obsidian": false
   }
 ]
