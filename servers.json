@@ -42,13 +42,6 @@
     "obsidian": false
   },
   {
-    "name": "DBase IRC Network",
-    "description": "We are a technology and music-oriented community focused on ethical hacking, programming, system administration, and open-source development.",
-    "ircs": "ircs://irc.dbase.in.rs:6697",
-    "wss": "wss://irc.dbase.in.rs:16697",
-    "obsidian": false
-  },
-  {
     "name": "mIRCClub",
     "description": "We are more than just a server.",
     "wss": "wss://irc.mirc.club:8000/",
