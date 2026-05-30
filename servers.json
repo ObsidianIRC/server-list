@@ -43,7 +43,7 @@
   },
     {
     "name": "DBase IRC Network",
-    "description": "DBase is an IRC network founded in 2008, originally established as X-Serv before being rebranded to DBase Network. We are a technology and music-oriented community focused on ethical hacking, programming, system administration, and open-source development. Our network provides a platform for developers, security researchers, and technology enthusiasts to connect, share knowledge, and collaborate on projects. IRC Database - Comprehensive statistics and information about IRC networks, servers, and channels. Browse IRC networks, find IRC servers, search IRC channels, and view real-time IRC statistics.",
+    "description": "We are a technology and music-oriented community focused on ethical hacking, programming, system administration, and open-source development.",
     "ircs": "ircs://irc.dbase.in.rs:6697",
     "wss": "wss://irc.dbase.in.rs:16697",
     "obsidian": false
