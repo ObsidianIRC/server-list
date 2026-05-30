@@ -1,5 +1,12 @@
 [
   {
+    "name": "mIRCClub",
+    "description": "We are more than just a server.",
+    "wss": "wss://chat.mirc.club:443",
+    "ircs": "ircs://irc.mirc.club:6697",
+    "obsidian": false
+  },
+  {
     "name": "h4ks.com",
     "description": "A cool place for tech talk, randomness and nerding.",
     "wss": "wss://irc.h4ks.com:443",
@@ -39,13 +46,6 @@
     "description": "Multi purpose chat network.",
     "wss": "wss://irc.ptirc.org:7666",
     "ircs": "ircs://irc.ptirc.org:6697",
-    "obsidian": false
-  },
-    {
-    "name": "DBase IRC Network",
-    "description": "DBase is an IRC network founded in 2008, originally established as X-Serv before being rebranded to DBase Network. We are a technology and music-oriented community focused on ethical hacking, programming, system administration, and open-source development. Our network provides a platform for developers, security researchers, and technology enthusiasts to connect, share knowledge, and collaborate on projects. IRC Database - Comprehensive statistics and information about IRC networks, servers, and channels. Browse IRC networks, find IRC servers, search IRC channels, and view real-time IRC statistics.",
-    "ircs": "ircs://irc.dbase.in.rs:6697",
-    "wss": "wss://irc.dbase.in.rs:16697",
     "obsidian": false
   }
 ]
