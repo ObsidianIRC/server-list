@@ -1,0 +1,39 @@
+name: Crawl servers
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+
+      - name: Crawl servers and apply capability corrections
+        run: uv run scripts/probe.py --apply --report crawl-report.md
+
+      - name: Open pull request with detected changes
+        if: ${{ !env.ACT }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: servers.json
+          branch: bot/server-crawl
+          delete-branch: true
+          commit-message: 'chore: sync server capabilities from daily crawl'
+          title: 'Automated server capability sync'
+          body-path: crawl-report.md
+          labels: |
+            automated
+            server-crawl

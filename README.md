@@ -14,4 +14,3 @@ We appreciate your patience so much!
 Don't worry, we've got you! If you make an obvious mistake in the JSON syntax, we will just politely fix it for you! 😁
 
 And if you left out something that's required, we'll let you know by commenting on your Pull Request.
-
