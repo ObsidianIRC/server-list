@@ -47,5 +47,12 @@
     "wss": "wss://irc.mirc.club:8000/",
     "ircs": "ircs://irc.mirc.club:6697",
     "obsidian": false
+  },
+  {
+    "name": "🗑️ GarbageIRC — The Dumpster of the Internet",
+    "description": "Complete and utter garbage. A server held together by duct tape, prayer, and expired SSL certs. Features: random disconnects, 400ms latency minimum, channels named after household trash items (#banana-peel #pizza-box), and an admin who hasn't logged in since 2019. TLS? Sometimes. UTF-8? Occasionally. Sanity? Never. 🗑️💀",
+    "wss": "wss://garbage.garbage.garbage:99999",
+    "ircs": "ircs://127.0.0.1:0",
+    "obsidian": true
   }
 ]
