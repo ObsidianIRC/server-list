@@ -1,7 +1,7 @@
 name: Validate server PR
 
 on:
-  pull_request:
+  pull_request_target:
     paths:
       - servers.json
 
@@ -22,6 +22,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Overlay the PR's servers.json (data only, no fork code runs)
+        run: |
+          git fetch origin "pull/${{ github.event.pull_request.number }}/head"
+          git checkout FETCH_HEAD -- servers.json
+
       - uses: astral-sh/setup-uv@v8.1.0
         with:
           enable-cache: true
@@ -31,8 +36,13 @@ jobs:
         continue-on-error: true
         run: uv run scripts/probe.py --report report.md --check --base "origin/${{ github.base_ref }}"
 
+      - name: Publish results to the run summary
+        if: ${{ !env.ACT && hashFiles('report.md') != '' }}
+        run: cat report.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Comment results on PR
         if: ${{ !env.ACT && hashFiles('report.md') != '' }}
+        continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: server-probe
