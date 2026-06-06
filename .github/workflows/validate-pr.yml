@@ -1,0 +1,45 @@
+name: Validate server PR
+
+on:
+  pull_request:
+    paths:
+      - servers.json
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: validate-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+
+      - name: Probe changed servers
+        id: probe
+        continue-on-error: true
+        run: uv run scripts/probe.py --report report.md --check --base "origin/${{ github.base_ref }}"
+
+      - name: Comment results on PR
+        if: ${{ !env.ACT }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: server-probe
+          path: report.md
+
+      - name: Fail if a changed server is unreachable
+        if: steps.probe.outcome != 'success'
+        run: |
+          echo "::error::one or more changed servers failed connectivity validation"
+          exit 1
