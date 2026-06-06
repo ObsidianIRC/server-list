@@ -47,5 +47,12 @@
     "wss": "wss://irc.mirc.club:8000/",
     "ircs": "ircs://irc.mirc.club:6697",
     "obsidian": false
+  },
+  {
+    "name": "VoidIRC — The Server Between Packets",
+    "description": "A server that exists in the brief moment between TCP SYN and ACK. Messages arrive before they're sent. RFC compliance is a suggestion. Ping time: -42ms.",
+    "wss": "wss://void.nullroute.localhost:65535",
+    "ircs": "ircs://void.nullroute.localhost:65535",
+    "obsidian": true
   }
 ]
