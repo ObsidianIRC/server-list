@@ -32,7 +32,7 @@ jobs:
         run: uv run scripts/probe.py --report report.md --check --base "origin/${{ github.base_ref }}"
 
       - name: Comment results on PR
-        if: ${{ !env.ACT }}
+        if: ${{ !env.ACT && hashFiles('report.md') != '' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: server-probe

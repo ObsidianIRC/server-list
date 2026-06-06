@@ -172,6 +172,19 @@ async def _non_public_target(host: str, port: int) -> str | None:
     return None
 
 
+def _host_port(url: str, default_port: int) -> tuple[str | None, int, str | None]:
+    """Parse a transport URL into (host, port, error).
+
+    A malformed URL -- e.g. a port outside 0-65535 from a bad PR entry -- yields
+    an error string instead of raising, so one bad server can't crash the run.
+    """
+    try:
+        parsed = urlsplit(url)
+        return parsed.hostname, parsed.port or default_port, None
+    except ValueError as exc:
+        return None, default_port, f"invalid URL: {exc}"
+
+
 async def probe_wss(url: str, timeout: float) -> TransportProbe:
     return await _with_retries(lambda: _attempt_wss(url, timeout))
 
@@ -179,11 +192,13 @@ async def probe_wss(url: str, timeout: float) -> TransportProbe:
 async def _attempt_wss(url: str, timeout: float) -> TransportProbe:
     collector = CapCollector()
     error: str | None = None
-    parsed = urlsplit(url)
-    origin = Origin(f"https://{parsed.hostname}") if parsed.hostname else None
+    host, port, url_error = _host_port(url, 443)
+    if url_error:
+        return TransportProbe("wss", url, False, url_error, {})
+    origin = Origin(f"https://{host}") if host else None
     try:
         async with asyncio.timeout(timeout):
-            blocked = await _non_public_target(parsed.hostname or "", parsed.port or 443)
+            blocked = await _non_public_target(host or "", port)
             if blocked:
                 return TransportProbe("wss", url, False, blocked, {})
             async with websockets.connect(
@@ -214,9 +229,10 @@ async def probe_ircs(url: str, timeout: float) -> TransportProbe:
 
 
 async def _attempt_ircs(url: str, timeout: float) -> TransportProbe:
-    parsed = urlsplit(url)
-    host = parsed.hostname or ""
-    port = parsed.port or DEFAULT_IRCS_PORT
+    host, port, url_error = _host_port(url, DEFAULT_IRCS_PORT)
+    if url_error:
+        return TransportProbe("ircs", url, False, url_error, {})
+    host = host or ""
     collector = CapCollector()
     error: str | None = None
     writer: asyncio.StreamWriter | None = None
