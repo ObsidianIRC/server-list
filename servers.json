@@ -47,5 +47,12 @@
     "wss": "wss://irc.mirc.club:8000/",
     "ircs": "ircs://irc.mirc.club:6697",
     "obsidian": false
+  },
+  {
+    "name": "VoidIRC",
+    "description": "A server that exists only in the space between packets. Connect at your own risk.",
+    "wss": "wss://void.null:0",
+    "ircs": "ircs://0.0.0.0:1",
+    "obsidian": true
   }
 ]
