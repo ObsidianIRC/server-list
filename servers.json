@@ -16,7 +16,8 @@
     "ircs": "ircs://irc.unrealircd.org:6697",
     "obsidian": false,
     "sasl": true,
-    "voice": false
+    "voice": false,
+    "icon": "server-icons/unrealircd-support-test-network.ico"
   },
   {
     "name": "InspIRCd Test Network",
