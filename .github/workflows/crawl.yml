@@ -21,14 +21,16 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Crawl servers and apply capability corrections
+      - name: Crawl servers and apply capability + icon corrections
         run: uv run scripts/probe.py --apply --report crawl-report.md
 
       - name: Open pull request with detected changes
         if: ${{ !env.ACT }}
         uses: peter-evans/create-pull-request@v7
         with:
-          add-paths: servers.json
+          add-paths: |
+            servers.json
+            server-icons/**
           branch: bot/server-crawl
           delete-branch: true
           commit-message: 'chore: sync server capabilities from daily crawl'
