@@ -27,14 +27,15 @@ error is recorded as the reason (surfaced in the PR / removal proposal).
 
 Server icons follow the IRCv3 network-icon spec: a server publishes its icon as
 an `ICON=<url>` (or work-in-progress `draft/ICON=<url>`) ISUPPORT token in the
-RPL_ISUPPORT 005 burst, which is only sent after connection registration.  Capability detection deliberately
-stops at `CAP LS` and never registers, so icon collection is a separate,
-heavier mode used only by the daily crawl (`--apply`): there the probe also
-sends `CAP END` + NICK/USER, reads the welcome burst, extracts the icon URL,
-downloads the image into server-icons/ and records its path in servers.json.
-The icon is re-fetched each crawl and rewritten only when it actually changed,
-so the list tracks the server's current icon without needless churn; the field
-is left empty for servers that advertise none.
+RPL_ISUPPORT 005 burst, which is only sent after connection registration.  PR
+validation stops at `CAP LS` (it only needs reachability and caps), but the
+daily crawl (`--apply`) registers: a single pass per transport that sends `CAP
+END` + NICK/USER, reads the welcome burst for the icon URL, and reuses that same
+connection for reachability and caps -- so the crawl never opens the rapid
+second connection per server that daemons reject.  The icon is downloaded into
+server-icons/ and rewritten only when it actually changed, so the list tracks
+the server's current icon without needless churn; the field is left empty for
+servers that advertise none.
 """
 import argparse
 import asyncio
@@ -103,14 +104,9 @@ WSS_USER_AGENT = "Mozilla/5.0 (compatible; ObsidianIRC-probe/1.0)"
 MAX_ICON_BYTES = 512 * 1024
 ICON_FETCH_TIMEOUT = 15.0
 
-# Registration is heavier than capability detection and some daemons rate limit
-# completed registrations per IP, so harvesting needs its own longer budget.
-# Retries are few and spaced: each round is another registration, so hammering a
-# server only feeds the throttle that made it miss in the first place; the pause
-# is meant to outlast a throttle window.
-ICON_HARVEST_TIMEOUT = 20.0
-ICON_HARVEST_ATTEMPTS = 2
-ICON_HARVEST_BACKOFF = 3.0
+# A registering pass waits for the post-registration welcome burst, so it needs
+# a longer budget than the caps-only probe.
+REGISTER_TIMEOUT = 20.0
 CONTENT_TYPE_EXT = {
     "image/png": ".png",
     "image/jpeg": ".jpg",
@@ -452,50 +448,44 @@ async def probe_server(entry: dict, timeout: float) -> ServerResult:
     )
 
 
-@dataclass
-class IconHarvest:
-    url: str | None
-    errors: list[str]
+async def crawl_server(entry: dict, timeout: float) -> tuple[ServerResult, list[str]]:
+    """One registering pass per server: reachability, capabilities, and the
+    network-icon URL from a single connection per transport.
 
-
-async def harvest_icon(entry: dict, timeout: float) -> IconHarvest:
-    """Best-effort icon URL from the IRCv3 network-icon ISUPPORT token.
-
-    Reading ISUPPORT requires completing registration, which some daemons rate
-    limit per IP, so this is kept separate from probe_server: a server is never
-    marked unreachable or dropped because this pass failed.  The advertised URL
-    is authoritative -- a server that publishes an icon overrides a hand-added
-    one; a hand-added icon survives only while the server advertises none.
-
-    Transports are tried one at a time, each a single connection (no inner
-    retry), so registrations against one server don't burst into its flood
-    protection.  "No icon" is only concluded once *every* transport finished
-    registering without advertising one -- a server whose icon lives on a
-    transport we couldn't register against is retried, not silently dropped --
-    after a pause long enough for a throttle window to clear.  When attempts run
-    out the per-transport reason is returned so the report can show why an icon
-    was missed.
+    The crawl does NOT run the caps-only probe_server first.  The icon lives in
+    ISUPPORT, which only arrives after registration, and the runner kept getting
+    its harvest connection rejected (RST / HTTP 500 / refused upgrade) precisely
+    because it was a *second* connection opened seconds after the cap check --
+    while that same transport answered the first connection fine.  Registering on
+    the one-and-only connection sidesteps that.  Reachability still derives from
+    the CAP LS reply, so it is as reliable as the caps-only probe; the second
+    return value lists transports whose registration failed, for the report.
     """
-    targets = [(kind, entry[kind]) for kind in ("ircs", "wss") if entry.get(kind)]
-    errors: list[str] = []
-    for attempt in range(ICON_HARVEST_ATTEMPTS):
-        all_registered = True
-        errors = []
-        for kind, url in targets:
-            probe = await (
-                _attempt_ircs(url, timeout, True) if kind == "ircs" else _attempt_wss(url, timeout, True)
-            )
-            icon = icon_url_from(probe.isupport)
-            if icon:
-                return IconHarvest(icon, [])
-            if not probe.complete:
-                all_registered = False
-                errors.append(f"{kind}: {probe.error or 'no ISUPPORT received'}")
-        if all_registered:
-            return IconHarvest(None, [])
-        if attempt < ICON_HARVEST_ATTEMPTS - 1:
-            await asyncio.sleep(ICON_HARVEST_BACKOFF)
-    return IconHarvest(None, errors)
+    coros = []
+    if entry.get("wss"):
+        coros.append(_attempt_wss(entry["wss"], timeout, True))
+    if entry.get("ircs"):
+        coros.append(_attempt_ircs(entry["ircs"], timeout, True))
+
+    probes = await asyncio.gather(*coros)
+
+    merged_caps: dict[str, str] = {}
+    merged_isupport: dict[str, str] = {}
+    for probe in probes:
+        if probe.reachable:
+            merged_caps.update(probe.caps)
+        merged_isupport.update(probe.isupport)
+
+    any_reachable = any(p.reachable for p in probes)
+    result = ServerResult(
+        name=entry.get("name", "?"),
+        endpoints=[EndpointStatus(p.transport, p.url, p.reachable, p.error) for p in probes],
+        any_reachable=any_reachable,
+        detected=detect(merged_caps) if any_reachable else None,
+        icon_url=icon_url_from(merged_isupport),
+    )
+    failures = [f"{p.transport}: {p.error}" for p in probes if not p.complete and p.error]
+    return result, failures
 
 
 def load_servers() -> list[dict]:
@@ -759,24 +749,19 @@ async def run(args: argparse.Namespace) -> int:
         to_probe = changed_servers(servers, args.base)
         scope = f"Scope: {len(to_probe)} server(s) changed vs `{args.base}`"
 
-    results = list(
-        await _gather_limited(MAX_CONCURRENCY, [probe_server(s, args.timeout) for s in to_probe])
-    )
-
     changes: list[str] = []
     removed: list[str] = []
     icon_changes: list[str] = []
     harvest_failures: list[tuple[str, list[str]]] = []
     if args.apply:
-        harvests = await _gather_limited(
-            MAX_CONCURRENCY, [harvest_icon(s, ICON_HARVEST_TIMEOUT) for s in to_probe]
+        pairs = await _gather_limited(
+            MAX_CONCURRENCY, [crawl_server(s, REGISTER_TIMEOUT) for s in to_probe]
         )
-        for result, harvest in zip(results, harvests):
-            result.icon_url = harvest.url
+        results = [result for result, _ in pairs]
         harvest_failures = [
-            (entry.get("name", "?"), harvest.errors)
-            for entry, harvest in zip(to_probe, harvests)
-            if harvest.url is None and harvest.errors
+            (entry.get("name", "?"), failures)
+            for (result, failures), entry in zip(pairs, to_probe)
+            if result.icon_url is None and failures
         ]
         fetched_icons = download_icons(results)
         updated, changes, removed, icon_changes = apply_corrections(servers, results, fetched_icons)
@@ -784,6 +769,10 @@ async def run(args: argparse.Namespace) -> int:
             json.dumps(updated, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )
         prune_orphan_icons(updated)
+    else:
+        results = list(
+            await _gather_limited(MAX_CONCURRENCY, [probe_server(s, args.timeout) for s in to_probe])
+        )
 
     report = render_report(
         results, changes, removed, icon_changes,
