@@ -47,5 +47,1230 @@
     "wss": "wss://irc.mirc.club:8000/",
     "ircs": "ircs://irc.mirc.club:6697",
     "obsidian": false
+  },
+  {
+    "name": "2600net",
+    "description": "323 users, 233 channels on average (via netsplit.de).",
+    "wss": "wss://irc.2600.net:443/",
+    "ircs": "ircs://irc.2600.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "AIN",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.azirc.net:443/",
+    "ircs": "ircs://irc.azirc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Albirc",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.albirc.com:443/",
+    "ircs": "ircs://irc.albirc.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "All4masti",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.all4masti.com:443/",
+    "ircs": "ircs://irc.all4masti.com:6698",
+    "obsidian": false
+  },
+  {
+    "name": "AllNightCafe",
+    "description": "347 users, 55 channels on average (via netsplit.de).",
+    "wss": "wss://irc.allnightcafe.com:443/",
+    "ircs": "ircs://irc.allnightcafe.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "AlphaChat",
+    "description": "135 users, 109 channels on average (via netsplit.de).",
+    "wss": "wss://irc.alphachat.net:443/",
+    "ircs": "ircs://irc.alphachat.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "AlphaIRC",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.alphairc.com:443/",
+    "ircs": "ircs://irc.alphairc.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "AmicaChat",
+    "description": "27 users, 14 channels on average (via netsplit.de).",
+    "wss": "wss://irc.amicachat.net:443/",
+    "ircs": "ircs://irc.amicachat.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "AnimeFriends",
+    "description": "1650 users, 135 channels on average (via netsplit.de).",
+    "wss": "wss://irc.animefriends.moe:443/",
+    "ircs": "ircs://irc.animefriends.moe:7000",
+    "obsidian": false
+  },
+  {
+    "name": "AnonOps",
+    "description": "130 users, 186 channels on average (via netsplit.de).",
+    "wss": "wss://irc.anonops.com:443/",
+    "ircs": "ircs://irc.anonops.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ApropoRomania",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.aproporomania.ro:443/",
+    "ircs": "ircs://irc.aproporomania.ro:6697",
+    "obsidian": false
+  },
+  {
+    "name": "asylum",
+    "description": "25 users, 17 channels on average (via netsplit.de).",
+    "wss": "wss://irc.asylum.xyz:443/",
+    "ircs": "ircs://irc.asylum.xyz:6697",
+    "obsidian": false
+  },
+  {
+    "name": "AyoChat",
+    "description": "5211 users, 70 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ayochat.or.id:443/",
+    "ircs": "ircs://irc.ayochat.or.id:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Azzurra",
+    "description": "147 users, 197 channels on average (via netsplit.de).",
+    "wss": "wss://irc.azzurra.chat:443/",
+    "ircs": "ircs://irc.azzurra.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "BitreichIRC",
+    "description": "60 users, 21 channels on average (via netsplit.de).",
+    "wss": "wss://irc.bitreich.org:443/",
+    "ircs": "ircs://irc.bitreich.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Black-Cell.net",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.black-cell.net:443/",
+    "ircs": "ircs://irc.black-cell.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "BRASnet",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.redebrasnet.com.br:443/",
+    "ircs": "ircs://irc.redebrasnet.com.br:6697",
+    "obsidian": false
+  },
+  {
+    "name": "BRASnet.chat",
+    "description": "44 users, 20 channels on average (via netsplit.de).",
+    "wss": "wss://irc.brasnet.chat:443/",
+    "ircs": "ircs://irc.brasnet.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Brazink",
+    "description": "63 users, 143 channels on average (via netsplit.de).",
+    "wss": "wss://irc.brazink.net:443/",
+    "ircs": "ircs://irc.brazink.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "C2H5OH",
+    "description": "63 users, 20 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ludost.net:443/",
+    "ircs": "ircs://irc.ludost.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "CakeForceUK",
+    "description": "31 users, 28 channels on average (via netsplit.de).",
+    "wss": "wss://irc.cakeforce.co.uk:443/",
+    "ircs": "ircs://irc.cakeforce.co.uk:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Chaat",
+    "description": "1903 users, 288 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chaat.fr:443/",
+    "ircs": "ircs://irc.chaat.fr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChamberIRC",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chamberirc.net:443/",
+    "ircs": "ircs://irc.chamberirc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Chat.com.tr",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chat.com.tr:443/",
+    "ircs": "ircs://irc.chat.com.tr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChatArea",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc2.chatarea.nl:443/",
+    "ircs": "ircs://irc2.chatarea.nl:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Chateo",
+    "description": "135 users, 16 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chateo.org:443/",
+    "ircs": "ircs://irc.chateo.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Chating.ID",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chating.id:443/",
+    "ircs": "ircs://irc.chating.id:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChatIRC.net",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chatirc.net:443/",
+    "ircs": "ircs://irc.chatirc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChatLife",
+    "description": "255 users, 63 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chatlife.net:443/",
+    "ircs": "ircs://irc.chatlife.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChatNova",
+    "description": "61 users, 21 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chatnova.fr:443/",
+    "ircs": "ircs://irc.chatnova.fr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChatNPlay",
+    "description": "37 users, 45 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chatnplay.org:443/",
+    "ircs": "ircs://irc.chatnplay.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChatSansar",
+    "description": "105 users, 17 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chatsansar.com:443/",
+    "ircs": "ircs://irc.chatsansar.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Chattersnet",
+    "description": "1136 users, 324 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chattersnet.nl:443/",
+    "ircs": "ircs://irc.chattersnet.nl:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Chatteurs.fr",
+    "description": "39 users, 32 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chatteurs.fr:443/",
+    "ircs": "ircs://irc.chatteurs.fr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ChillNet",
+    "description": "8 users, 39 channels on average (via netsplit.de).",
+    "wss": "wss://irc.chillnet.org:443/",
+    "ircs": "ircs://irc.chillnet.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Coders-IRC",
+    "description": "15 users, 12 channels on average (via netsplit.de).",
+    "wss": "wss://irc.coders-irc.net:443/",
+    "ircs": "ircs://irc.coders-irc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Communiti-Chat",
+    "description": "22 users, 15 channels on average (via netsplit.de).",
+    "wss": "wss://irc.communiti.chat:443/",
+    "ircs": "ircs://irc.communiti.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Coolsmile.net",
+    "description": "155 users, 44 channels on average (via netsplit.de).",
+    "wss": "wss://irc.coolsmile.net:443/",
+    "ircs": "ircs://irc.coolsmile.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Cuff-Link",
+    "description": "341 users, 228 channels on average (via netsplit.de).",
+    "wss": "wss://irc.cuff-link.me:443/",
+    "ircs": "ircs://irc.cuff-link.me:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Cuplu",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.cuplu.eu:443/",
+    "ircs": "ircs://irc.cuplu.eu:6697",
+    "obsidian": false
+  },
+  {
+    "name": "CyberArmy",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.cyberarmy.com:443/",
+    "ircs": "ircs://irc.cyberarmy.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "CyberIRC",
+    "description": "3256 users, 36 channels on average (via netsplit.de).",
+    "wss": "wss://irc.cyberirc.org:443/",
+    "ircs": "ircs://irc.cyberirc.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "CyGen",
+    "description": "8 users, 24 channels on average (via netsplit.de).",
+    "wss": "wss://irc.cygen.net:443/",
+    "ircs": "ircs://irc.cygen.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "d3x",
+    "description": "25 users, 21 channels on average (via netsplit.de).",
+    "wss": "wss://irc.afnet.us:443/",
+    "ircs": "ircs://irc.afnet.us:6697",
+    "obsidian": false
+  },
+  {
+    "name": "DareNET",
+    "description": "64 users, 132 channels on average (via netsplit.de).",
+    "wss": "wss://irc.darenet.org:443/",
+    "ircs": "ircs://irc.darenet.org:9999",
+    "obsidian": false
+  },
+  {
+    "name": "darkfasel.net",
+    "description": "616 users, 133 channels on average (via netsplit.de).",
+    "wss": "wss://irc.darkfasel.net:443/",
+    "ircs": "ircs://irc.darkfasel.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "darkscience",
+    "description": "697 users, 170 channels on average (via netsplit.de).",
+    "wss": "wss://irc.darchoods.net:443/",
+    "ircs": "ircs://irc.darchoods.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "DarkWorld",
+    "description": "244 users, 230 channels on average (via netsplit.de).",
+    "wss": "wss://irc.darkworld.network:443/",
+    "ircs": "ircs://irc.darkworld.network:6697",
+    "obsidian": false
+  },
+  {
+    "name": "deepspace.org",
+    "description": "15 users, 3 channels on average (via netsplit.de).",
+    "wss": "wss://irc.deepspace.org:443/",
+    "ircs": "ircs://irc.deepspace.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "degunino.net",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.degunino.net:443/",
+    "ircs": "ircs://irc.degunino.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Deutscher-Chat.de",
+    "description": "324 users, 44 channels on average (via netsplit.de).",
+    "wss": "wss://irc.deutscher-chat.de:443/",
+    "ircs": "ircs://irc.deutscher-chat.de:6697",
+    "obsidian": false
+  },
+  {
+    "name": "DigitalIRC",
+    "description": "1932 users, 110 channels on average (via netsplit.de).",
+    "wss": "wss://irc.digitalirc.org:443/",
+    "ircs": "ircs://irc.digitalirc.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Discut.Biz",
+    "description": "39 users, 16 channels on average (via netsplit.de).",
+    "wss": "wss://irc.discut.biz:443/",
+    "ircs": "ircs://irc.discut.biz:6697",
+    "obsidian": false
+  },
+  {
+    "name": "DynastyNet",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.dynastynet.net:443/",
+    "ircs": "ircs://irc.dynastynet.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "EfesNet",
+    "description": "2406 users, 174 channels on average (via netsplit.de).",
+    "wss": "wss://irc.efes.net:443/",
+    "ircs": "ircs://irc.efes.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "EFnet",
+    "description": "8804 users, 5595 channels on average (via netsplit.de).",
+    "wss": "wss://irc.efnet.org:443/",
+    "ircs": "ircs://irc.efnet.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ElectroCode",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://toaster.electrocode.net:443/",
+    "ircs": "ircs://toaster.electrocode.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Entrechat",
+    "description": "187 users, 107 channels on average (via netsplit.de).",
+    "wss": "wss://irc.entrechat.eu:443/",
+    "ircs": "ircs://irc.entrechat.eu:6677",
+    "obsidian": false
+  },
+  {
+    "name": "EvilNET",
+    "description": "453 users, 89 channels on average (via netsplit.de).",
+    "wss": "wss://irc.evilnet.org:443/",
+    "ircs": "ircs://irc.evilnet.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "EvoChat",
+    "description": "1229 users, 227 channels on average (via netsplit.de).",
+    "wss": "wss://irc.evochat.co.id:443/",
+    "ircs": "ircs://irc.evochat.co.id:6697",
+    "obsidian": false
+  },
+  {
+    "name": "FlexChat",
+    "description": "5381 users, 75 channels on average (via netsplit.de).",
+    "wss": "wss://irc.flexchat.org:443/",
+    "ircs": "ircs://irc.flexchat.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ForumCerdas",
+    "description": "167 users, 63 channels on average (via netsplit.de).",
+    "wss": "wss://irc.forumcerdas.net:443/",
+    "ircs": "ircs://irc.forumcerdas.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "freenode",
+    "description": "4988 users, 7965 channels on average (via netsplit.de).",
+    "wss": "wss://chat.freenode.net:443/",
+    "ircs": "ircs://chat.freenode.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "FreeUniBG",
+    "description": "13470 users, 652 channels on average (via netsplit.de).",
+    "wss": "wss://irc.freeunibg.eu:443/",
+    "ircs": "ircs://irc.freeunibg.eu:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Genscripts",
+    "description": "54 users, 5 channels on average (via netsplit.de).",
+    "wss": "wss://irc.genscripts.net:443/",
+    "ircs": "ircs://irc.genscripts.net:6669",
+    "obsidian": false
+  },
+  {
+    "name": "GhostNet",
+    "description": "13 users, 62 channels on average (via netsplit.de).",
+    "wss": "wss://irc.daleksandrov.eu:443/",
+    "ircs": "ircs://irc.daleksandrov.eu:6697",
+    "obsidian": false
+  },
+  {
+    "name": "gigachat",
+    "description": "18 users, 9 channels on average (via netsplit.de).",
+    "wss": "wss://irc.gigachat.net:443/",
+    "ircs": "ircs://irc.gigachat.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Global-Irc.Eu",
+    "description": "539 users, 46 channels on average (via netsplit.de).",
+    "wss": "wss://irc.global-irc.eu:443/",
+    "ircs": "ircs://irc.global-irc.eu:6697",
+    "obsidian": false
+  },
+  {
+    "name": "H4x0red",
+    "description": "19 users, 11 channels on average (via netsplit.de).",
+    "wss": "wss://irc.h4x0.red:443/",
+    "ircs": "ircs://irc.h4x0.red:6697",
+    "obsidian": false
+  },
+  {
+    "name": "hackint",
+    "description": "10723 users, 2077 channels on average (via netsplit.de).",
+    "wss": "wss://irc.hackint.org:443/",
+    "ircs": "ircs://irc.hackint.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "hashbang.sh",
+    "description": "78 users, 50 channels on average (via netsplit.de).",
+    "wss": "wss://irc.hashbang.sh:443/",
+    "ircs": "ircs://irc.hashbang.sh:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Hosnet",
+    "description": "25 users, 10 channels on average (via netsplit.de).",
+    "wss": "wss://tchat.hosnet.fr:443/",
+    "ircs": "ircs://tchat.hosnet.fr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Hub4Ever.Org",
+    "description": "318 users, 17 channels on average (via netsplit.de).",
+    "wss": "wss://irc.hub4ever.org:443/",
+    "ircs": "ircs://irc.hub4ever.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "HybridIRC",
+    "description": "22781 users, 441 channels on average (via netsplit.de).",
+    "wss": "wss://irc.hybridirc.com:443/",
+    "ircs": "ircs://irc.hybridirc.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IceStarIRC",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.icestarirc.org:443/",
+    "ircs": "ircs://irc.icestarirc.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "iChat",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc2.ichat.ro:443/",
+    "ircs": "ircs://irc2.ichat.ro:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ICQ-Chat",
+    "description": "132 users, 84 channels on average (via netsplit.de).",
+    "wss": "wss://irc.icq-chat.com:443/",
+    "ircs": "ircs://irc.icq-chat.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Inframonde",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.inframonde.org:443/",
+    "ircs": "ircs://irc.inframonde.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "interlinked.me",
+    "description": "66 users, 60 channels on average (via netsplit.de).",
+    "wss": "wss://irc.interlinked.me:443/",
+    "ircs": "ircs://irc.interlinked.me:9999",
+    "obsidian": false
+  },
+  {
+    "name": "IRC-Ban.de",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.irc-ban.de:443/",
+    "ircs": "ircs://irc.irc-ban.de:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRC-Nerds",
+    "description": "1235 users, 248 channels on average (via netsplit.de).",
+    "wss": "wss://irc.irc-nerds.net:443/",
+    "ircs": "ircs://irc.irc-nerds.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRCCloud",
+    "description": "695 users, 221 channels on average (via netsplit.de).",
+    "wss": "wss://irc.irccloud.com:443/",
+    "ircs": "ircs://irc.irccloud.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRCDrama",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ircdrama.ca:443/",
+    "ircs": "ircs://irc.ircdrama.ca:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRCGate.it",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ircgate.it:443/",
+    "ircs": "ircs://irc.ircgate.it:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRCnet",
+    "description": "15611 users, 9203 channels on average (via netsplit.de).",
+    "wss": "wss://irc.us.ircnet.net:443/",
+    "ircs": "ircs://irc.us.ircnet.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRCNow",
+    "description": "544 users, 567 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ircnow.org:443/",
+    "ircs": "ircs://irc.ircnow.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "IRCserveR_Italia",
+    "description": "59 users, 29 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ircserver.it:443/",
+    "ircs": "ircs://irc.ircserver.it:6696",
+    "obsidian": false
+  },
+  {
+    "name": "IRCsource",
+    "description": "111 users, 70 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ircsource.net:443/",
+    "ircs": "ircs://irc.ircsource.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Jeko",
+    "description": "14 users, 3 channels on average (via netsplit.de).",
+    "wss": "wss://irc.jeko.org:443/",
+    "ircs": "ircs://irc.jeko.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Kahkaha.Gen.Tr",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.kahkaha.gen.tr:443/",
+    "ircs": "ircs://irc.kahkaha.gen.tr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "KonnectChatIRC",
+    "description": "4705 users, 100 channels on average (via netsplit.de).",
+    "wss": "wss://irc.konnectchatirc.net:443/",
+    "ircs": "ircs://irc.konnectchatirc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "LewdChat",
+    "description": "252 users, 585 channels on average (via netsplit.de).",
+    "wss": "wss://irc.lewdchat.com:443/",
+    "ircs": "ircs://irc.lewdchat.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Libera.Chat",
+    "description": "31721 users, 22360 channels on average (via netsplit.de).",
+    "wss": "wss://irc.libera.chat:443/",
+    "ircs": "ircs://irc.libera.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "LibertaCasa",
+    "description": "21 users, 141 channels on average (via netsplit.de).",
+    "wss": "wss://irc.liberta.casa:443/",
+    "ircs": "ircs://irc.liberta.casa:6697",
+    "obsidian": false
+  },
+  {
+    "name": "LibraIRC",
+    "description": "203 users, 265 channels on average (via netsplit.de).",
+    "wss": "wss://irc.librairc.net:443/",
+    "ircs": "ircs://irc.librairc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "LinkNet",
+    "description": "2420 users, 1807 channels on average (via netsplit.de).",
+    "wss": "wss://irc.link-net.org:443/",
+    "ircs": "ircs://irc.link-net.org:7000",
+    "obsidian": false
+  },
+  {
+    "name": "LizardIRC",
+    "description": "94 users, 92 channels on average (via netsplit.de).",
+    "wss": "wss://irc.lizardirc.org:443/",
+    "ircs": "ircs://irc.lizardirc.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "lowendirc.com",
+    "description": "28 users, 13 channels on average (via netsplit.de).",
+    "wss": "wss://lowendirc.com:443/",
+    "ircs": "ircs://lowendirc.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Luatic",
+    "description": "157 users, 1654 channels on average (via netsplit.de).",
+    "wss": "wss://irc.luatic.net:443/",
+    "ircs": "ircs://irc.luatic.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "LUG",
+    "description": "43 users, 10 channels on average (via netsplit.de).",
+    "wss": "wss://irc1.lug.ro:443/",
+    "ircs": "ircs://irc1.lug.ro:6697",
+    "obsidian": false
+  },
+  {
+    "name": "LunarIRC",
+    "description": "231 users, 221 channels on average (via netsplit.de).",
+    "wss": "wss://irc.lunarirc.net:443/",
+    "ircs": "ircs://irc.lunarirc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "MansionNET",
+    "description": "108 users, 58 channels on average (via netsplit.de).",
+    "wss": "wss://irc.inthemansion.com:443/",
+    "ircs": "ircs://irc.inthemansion.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Mavra.Net",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.mavra.net:443/",
+    "ircs": "ircs://irc.mavra.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "MeFalcon",
+    "description": "62 users, 14 channels on average (via netsplit.de).",
+    "wss": "wss://irc.mefalcon.org:443/",
+    "ircs": "ircs://irc.mefalcon.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Mobilci.Net",
+    "description": "63 users, 23 channels on average (via netsplit.de).",
+    "wss": "wss://irc.mobilci.net:443/",
+    "ircs": "ircs://irc.mobilci.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Morphie",
+    "description": "49 users, 27 channels on average (via netsplit.de).",
+    "wss": "wss://irc.morphie.net:443/",
+    "ircs": "ircs://irc.morphie.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "MyCooldude",
+    "description": "78 users, 119 channels on average (via netsplit.de).",
+    "wss": "wss://irc.mycooldude.info:443/",
+    "ircs": "ircs://irc.mycooldude.info:6697",
+    "obsidian": false
+  },
+  {
+    "name": "NekoNet",
+    "description": "14 users, 2 channels on average (via netsplit.de).",
+    "wss": "wss://irc.neko-net.org:443/",
+    "ircs": "ircs://irc.neko-net.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Net-Tchat",
+    "description": "615 users, 111 channels on average (via netsplit.de).",
+    "wss": "wss://irc.net-tchat.fr:443/",
+    "ircs": "ircs://irc.net-tchat.fr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Nether.RIP",
+    "description": "1064 users, 18 channels on average (via netsplit.de).",
+    "wss": "wss://irc.nether.rip:443/",
+    "ircs": "ircs://irc.nether.rip:6697",
+    "obsidian": false
+  },
+  {
+    "name": "newchat.gr",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://nostalgia.newchat.gr:443/",
+    "ircs": "ircs://nostalgia.newchat.gr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "NewNet",
+    "description": "204 users, 115 channels on average (via netsplit.de).",
+    "wss": "wss://irc.newnet.net:443/",
+    "ircs": "ircs://irc.newnet.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ngpre",
+    "description": "50 users, 25 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ngp.re:443/",
+    "ircs": "ircs://irc.ngp.re:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Noxether",
+    "description": "67 users, 21 channels on average (via netsplit.de).",
+    "wss": "wss://irc.noxether.net:443/",
+    "ircs": "ircs://irc.noxether.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "OFTC",
+    "description": "19740 users, 4116 channels on average (via netsplit.de).",
+    "wss": "wss://irc.oftc.net:443/",
+    "ircs": "ircs://irc.oftc.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Orixon",
+    "description": "595 users, 197 channels on average (via netsplit.de).",
+    "wss": "wss://irc.orixon.org:443/",
+    "ircs": "ircs://irc.orixon.org:9999",
+    "obsidian": false
+  },
+  {
+    "name": "oshaberi",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.oshaberi.ne.jp:443/",
+    "ircs": "ircs://irc.oshaberi.ne.jp:6697",
+    "obsidian": false
+  },
+  {
+    "name": "OtakuboX",
+    "description": "48 users, 47 channels on average (via netsplit.de).",
+    "wss": "wss://irc.otakubox.de:443/",
+    "ircs": "ircs://irc.otakubox.de:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ouchnet",
+    "description": "40 users, 91 channels on average (via netsplit.de).",
+    "wss": "wss://lorddank.ouch.chat:443/",
+    "ircs": "ircs://lorddank.ouch.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "out-dated.net",
+    "description": "77 users, 24 channels on average (via netsplit.de).",
+    "wss": "wss://irc.out-dated.net:443/",
+    "ircs": "ircs://irc.out-dated.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "OzOrg",
+    "description": "66 users, 37 channels on average (via netsplit.de).",
+    "wss": "wss://irc.oz.org:443/",
+    "ircs": "ircs://irc.oz.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "PenguinFriends",
+    "description": "12 users, 8 channels on average (via netsplit.de).",
+    "wss": "wss://irc.penguinfriends.org:443/",
+    "ircs": "ircs://irc.penguinfriends.org:6670",
+    "obsidian": false
+  },
+  {
+    "name": "PriyoBD",
+    "description": "22 users, 4 channels on average (via netsplit.de).",
+    "wss": "wss://irc.priyobd.com:443/",
+    "ircs": "ircs://irc.priyobd.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "RadioClick",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.radioclick.ro:443/",
+    "ircs": "ircs://irc.radioclick.ro:6697",
+    "obsidian": false
+  },
+  {
+    "name": "RedeSul",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.redesul.net.br:443/",
+    "ircs": "ircs://irc.redesul.net.br:6697",
+    "obsidian": false
+  },
+  {
+    "name": "RenCorner",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.rencorner.com:443/",
+    "ircs": "ircs://irc.rencorner.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "ReplIRC_Solanum",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://shell.oddprotocol.org:443/",
+    "ircs": "ircs://shell.oddprotocol.org:7427",
+    "obsidian": false
+  },
+  {
+    "name": "RetroNode",
+    "description": "128 users, 133 channels on average (via netsplit.de).",
+    "wss": "wss://irc.retronode.org:443/",
+    "ircs": "ircs://irc.retronode.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Ring.of.Lightning",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.ringoflightning.net:443/",
+    "ircs": "ircs://irc.ringoflightning.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "RisposteInformatiche",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.risposteinformatiche.it:443/",
+    "ircs": "ircs://irc.risposteinformatiche.it:6697",
+    "obsidian": false
+  },
+  {
+    "name": "RoIRCop",
+    "description": "88 users, 17 channels on average (via netsplit.de).",
+    "wss": "wss://irc.roircop.info:443/",
+    "ircs": "ircs://irc.roircop.info:6697",
+    "obsidian": false
+  },
+  {
+    "name": "runxiyu",
+    "description": "117 users, 63 channels on average (via netsplit.de).",
+    "wss": "wss://irc.runxiyu.org:443/",
+    "ircs": "ircs://irc.runxiyu.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "RusNet",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.rus-net.org:443/",
+    "ircs": "ircs://irc.rus-net.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SBSeeds",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://sbseeds.sytes.net:443/",
+    "ircs": "ircs://sbseeds.sytes.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Serverfreakz",
+    "description": "39 users, 13 channels on average (via netsplit.de).",
+    "wss": "wss://irc.serverfreakz.de:443/",
+    "ircs": "ircs://irc.serverfreakz.de:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Shelltalk",
+    "description": "542 users, 565 channels on average (via netsplit.de).",
+    "wss": "wss://shelltalk.net:443/",
+    "ircs": "ircs://shelltalk.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SimosNap",
+    "description": "3083 users, 606 channels on average (via netsplit.de).",
+    "wss": "wss://irc.simosnap.com:443/",
+    "ircs": "ircs://irc.simosnap.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SiSrv",
+    "description": "19 users, 4 channels on average (via netsplit.de).",
+    "wss": "wss://irc.sisrv.net:443/",
+    "ircs": "ircs://irc.sisrv.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SkyChatz",
+    "description": "11555 users, 955 channels on average (via netsplit.de).",
+    "wss": "wss://irc.skychatz.org:443/",
+    "ircs": "ircs://irc.skychatz.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Smurfnet",
+    "description": "223 users, 94 channels on average (via netsplit.de).",
+    "wss": "wss://irc.smurfnet.ch:443/",
+    "ircs": "ircs://irc.smurfnet.ch:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SohbetBurada",
+    "description": "412 users, 84 channels on average (via netsplit.de).",
+    "wss": "wss://irc.sohbetburada.com:443/",
+    "ircs": "ircs://irc.sohbetburada.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SomeNet",
+    "description": "18 users, 10 channels on average (via netsplit.de).",
+    "wss": "wss://irc.somenet.org:443/",
+    "ircs": "ircs://irc.somenet.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Soyjak-Party",
+    "description": "84 users, 11 channels on average (via netsplit.de).",
+    "wss": "wss://irc.soyjak.st:443/",
+    "ircs": "ircs://irc.soyjak.st:6697",
+    "obsidian": false
+  },
+  {
+    "name": "soyle.net",
+    "description": "412 users, 85 channels on average (via netsplit.de).",
+    "wss": "wss://irc.soyle.net:443/",
+    "ircs": "ircs://irc.soyle.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "SoylentNews",
+    "description": "84 users, 55 channels on average (via netsplit.de).",
+    "wss": "wss://irc.soylentnews.org:443/",
+    "ircs": "ircs://irc.soylentnews.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "StayNet",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.staynet.org:443/",
+    "ircs": "ircs://irc.staynet.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Striked",
+    "description": "12 users, 2 channels on average (via netsplit.de).",
+    "wss": "wss://irc.striked.org:443/",
+    "ircs": "ircs://irc.striked.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "StyxNet",
+    "description": "89 users, 50 channels on average (via netsplit.de).",
+    "wss": "wss://irc.styxnet.tech:443/",
+    "ircs": "ircs://irc.styxnet.tech:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Subluminal",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.subluminal.net:443/",
+    "ircs": "ircs://irc.subluminal.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "tawx",
+    "description": "58 users, 15 channels on average (via netsplit.de).",
+    "wss": "wss://irc.tawx.net:443/",
+    "ircs": "ircs://irc.tawx.net:6668",
+    "obsidian": false
+  },
+  {
+    "name": "tChat",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.tchat.chat:443/",
+    "ircs": "ircs://irc.tchat.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "tChatIRC",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://tchatirc.fr:443/",
+    "ircs": "ircs://tchatirc.fr:6697",
+    "obsidian": false
+  },
+  {
+    "name": "TeapotChat",
+    "description": "33 users, 22 channels on average (via netsplit.de).",
+    "wss": "wss://irc.teapot.chat:443/",
+    "ircs": "ircs://irc.teapot.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "TechNet",
+    "description": "177 users, 155 channels on average (via netsplit.de).",
+    "wss": "wss://irc.technet.chat:443/",
+    "ircs": "ircs://irc.technet.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "techrights",
+    "description": "70 users, 93 channels on average (via netsplit.de).",
+    "wss": "wss://irc.techrights.org:443/",
+    "ircs": "ircs://irc.techrights.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Techtronix",
+    "description": "63 users, 36 channels on average (via netsplit.de).",
+    "wss": "wss://irc.techtronix.net:443/",
+    "ircs": "ircs://irc.techtronix.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Teranova",
+    "description": "164 users, 32 channels on average (via netsplit.de).",
+    "wss": "wss://irc.teranova.net:443/",
+    "ircs": "ircs://irc.teranova.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "TheAirlock",
+    "description": "40 users, 38 channels on average (via netsplit.de).",
+    "wss": "wss://irc.theairlock.net:443/",
+    "ircs": "ircs://irc.theairlock.net:7778",
+    "obsidian": false
+  },
+  {
+    "name": "tilde.chat",
+    "description": "906 users, 384 channels on average (via netsplit.de).",
+    "wss": "wss://irc.tilde.chat:443/",
+    "ircs": "ircs://irc.tilde.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "TransAdvice",
+    "description": "361 users, 52 channels on average (via netsplit.de).",
+    "wss": "wss://irc.transadvice.org:443/",
+    "ircs": "ircs://irc.transadvice.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "TrYPNET",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.trypnet.net:443/",
+    "ircs": "ircs://irc.trypnet.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "TwistedNet",
+    "description": "214 users, 103 channels on average (via netsplit.de).",
+    "wss": "wss://irc.twistednet.org:443/",
+    "ircs": "ircs://irc.twistednet.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "UnifiedChat",
+    "description": "661 users, 29 channels on average (via netsplit.de).",
+    "wss": "wss://irc.unifiedchat.net:443/",
+    "ircs": "ircs://irc.unifiedchat.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "UnitedChat",
+    "description": "50 users, 52 channels on average (via netsplit.de).",
+    "wss": "wss://irc.unitedchat.org:443/",
+    "ircs": "ircs://irc.unitedchat.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "UniversoChat",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.universochat.com:443/",
+    "ircs": "ircs://irc.universochat.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "VoodooNet",
+    "description": "19 users, 2 channels on average (via netsplit.de).",
+    "wss": "wss://irc.voodoonet.biz:443/",
+    "ircs": "ircs://irc.voodoonet.biz:6668",
+    "obsidian": false
+  },
+  {
+    "name": "w3.org",
+    "description": "259 users, 522 channels on average (via netsplit.de).",
+    "wss": "wss://irc.w3.org:443/",
+    "ircs": "ircs://irc.w3.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "WebIRC",
+    "description": "46 users, 33 channels on average (via netsplit.de).",
+    "wss": "wss://irc.webirc.chat:443/",
+    "ircs": "ircs://irc.webirc.chat:6697",
+    "obsidian": false
+  },
+  {
+    "name": "WetFish",
+    "description": "183 users, 147 channels on average (via netsplit.de).",
+    "wss": "wss://irc.wetfish.net:443/",
+    "ircs": "ircs://irc.wetfish.net:6697",
+    "obsidian": false
+  },
+  {
+    "name": "WNet",
+    "description": "698 users, 42 channels on average (via netsplit.de).",
+    "wss": "wss://irc.wnet.tk:443/",
+    "ircs": "ircs://irc.wnet.tk:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Wotnet",
+    "description": "0 users, 0 channels on average (via netsplit.de).",
+    "wss": "wss://irc.wotnet.com:443/",
+    "ircs": "ircs://irc.wotnet.com:9000",
+    "obsidian": false
+  },
+  {
+    "name": "XeroMem",
+    "description": "66 users, 48 channels on average (via netsplit.de).",
+    "wss": "wss://irc.xeromem.com:443/",
+    "ircs": "ircs://irc.xeromem.com:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Xertion",
+    "description": "119 users, 94 channels on average (via netsplit.de).",
+    "wss": "wss://irc.xertion.org:443/",
+    "ircs": "ircs://irc.xertion.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Zemra",
+    "description": "46 users, 13 channels on average (via netsplit.de).",
+    "wss": "wss://irc.zemra.org:443/",
+    "ircs": "ircs://irc.zemra.org:6697",
+    "obsidian": false
+  },
+  {
+    "name": "Zik.chat",
+    "description": "41 users, 40 channels on average (via netsplit.de).",
+    "wss": "wss://irc.zik.chat:443/",
+    "ircs": "ircs://irc.zik.chat:6697",
+    "obsidian": false
   }
 ]
