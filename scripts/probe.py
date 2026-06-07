@@ -103,12 +103,14 @@ WSS_USER_AGENT = "Mozilla/5.0 (compatible; ObsidianIRC-probe/1.0)"
 MAX_ICON_BYTES = 512 * 1024
 ICON_FETCH_TIMEOUT = 15.0
 
-# Registration is heavier than capability detection and, run right after the
-# connectivity probe, can exceed the connectivity timeout on a slow/throttled
-# link.  Give the icon harvest its own longer budget and a few attempts so a
-# transient miss doesn't leave a server iconless until the next crawl.
+# Registration is heavier than capability detection and some daemons rate limit
+# completed registrations per IP, so harvesting needs its own longer budget.
+# Retries are few and spaced: each round is another registration, so hammering a
+# server only feeds the throttle that made it miss in the first place; the pause
+# is meant to outlast a throttle window.
 ICON_HARVEST_TIMEOUT = 20.0
-ICON_HARVEST_ATTEMPTS = 3
+ICON_HARVEST_ATTEMPTS = 2
+ICON_HARVEST_BACKOFF = 3.0
 CONTENT_TYPE_EXT = {
     "image/png": ".png",
     "image/jpeg": ".jpg",
@@ -450,43 +452,50 @@ async def probe_server(entry: dict, timeout: float) -> ServerResult:
     )
 
 
-async def harvest_icon(entry: dict, timeout: float) -> str | None:
+@dataclass
+class IconHarvest:
+    url: str | None
+    errors: list[str]
+
+
+async def harvest_icon(entry: dict, timeout: float) -> IconHarvest:
     """Best-effort icon URL from the IRCv3 network-icon ISUPPORT token.
 
-    Reading ISUPPORT requires completing registration -- a heavier handshake
-    than capability detection that some daemons throttle -- so it runs only
-    during the crawl and is kept entirely separate from probe_server: a server
-    is never marked unreachable or dropped because this extra pass failed.  The
-    advertised URL is authoritative, so a server that publishes an icon wins
-    over a hand-added one; a hand-added icon survives only while the server
-    advertises none.
+    Reading ISUPPORT requires completing registration, which some daemons rate
+    limit per IP, so this is kept separate from probe_server: a server is never
+    marked unreachable or dropped because this pass failed.  The advertised URL
+    is authoritative -- a server that publishes an icon overrides a hand-added
+    one; a hand-added icon survives only while the server advertises none.
 
-    A completed registration is authoritative for "no icon", so we only retry
-    when *no* transport finished registering -- a genuine no-icon server (zeolia,
-    mIRCClub) returns after one pass instead of being re-hammered, while a
-    transport that was cut off mid-burst is retried.
+    Transports are tried one at a time, each a single connection (no inner
+    retry), so registrations against one server don't burst into its flood
+    protection.  "No icon" is only concluded once *every* transport finished
+    registering without advertising one -- a server whose icon lives on a
+    transport we couldn't register against is retried, not silently dropped --
+    after a pause long enough for a throttle window to clear.  When attempts run
+    out the per-transport reason is returned so the report can show why an icon
+    was missed.
     """
+    targets = [(kind, entry[kind]) for kind in ("ircs", "wss") if entry.get(kind)]
+    errors: list[str] = []
     for attempt in range(ICON_HARVEST_ATTEMPTS):
-        coros = []
-        if entry.get("wss"):
-            coros.append(probe_wss(entry["wss"], timeout, register=True))
-        if entry.get("ircs"):
-            coros.append(probe_ircs(entry["ircs"], timeout, register=True))
-
-        probes = await asyncio.gather(*coros)
-
-        merged_isupport: dict[str, str] = {}
-        registered = False
-        for probe in probes:
-            merged_isupport.update(probe.isupport)
-            registered = registered or probe.complete
-
-        url = icon_url_from(merged_isupport)
-        if url or registered:
-            return url
+        all_registered = True
+        errors = []
+        for kind, url in targets:
+            probe = await (
+                _attempt_ircs(url, timeout, True) if kind == "ircs" else _attempt_wss(url, timeout, True)
+            )
+            icon = icon_url_from(probe.isupport)
+            if icon:
+                return IconHarvest(icon, [])
+            if not probe.complete:
+                all_registered = False
+                errors.append(f"{kind}: {probe.error or 'no ISUPPORT received'}")
+        if all_registered:
+            return IconHarvest(None, [])
         if attempt < ICON_HARVEST_ATTEMPTS - 1:
-            await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
-    return None
+            await asyncio.sleep(ICON_HARVEST_BACKOFF)
+    return IconHarvest(None, errors)
 
 
 def load_servers() -> list[dict]:
@@ -674,6 +683,7 @@ def render_report(
     icon_changes: list[str],
     icons_checked: bool = False,
     scope: str | None = None,
+    harvest_failures: list[tuple[str, list[str]]] | None = None,
 ) -> str:
     lines = ["## Server list probe", ""]
     if scope:
@@ -723,6 +733,9 @@ def render_report(
     if icon_changes:
         lines += ["", "### Icon updates", ""]
         lines += [f"- {c}" for c in icon_changes]
+    if harvest_failures:
+        lines += ["", "### Icon harvest failed — could not read ISUPPORT", ""]
+        lines += [f"- **{name}** — {'; '.join(errs)}" for name, errs in harvest_failures]
     return "\n".join(lines) + "\n"
 
 
@@ -753,12 +766,18 @@ async def run(args: argparse.Namespace) -> int:
     changes: list[str] = []
     removed: list[str] = []
     icon_changes: list[str] = []
+    harvest_failures: list[tuple[str, list[str]]] = []
     if args.apply:
-        icon_urls = await _gather_limited(
+        harvests = await _gather_limited(
             MAX_CONCURRENCY, [harvest_icon(s, ICON_HARVEST_TIMEOUT) for s in to_probe]
         )
-        for result, icon_url in zip(results, icon_urls):
-            result.icon_url = icon_url
+        for result, harvest in zip(results, harvests):
+            result.icon_url = harvest.url
+        harvest_failures = [
+            (entry.get("name", "?"), harvest.errors)
+            for entry, harvest in zip(to_probe, harvests)
+            if harvest.url is None and harvest.errors
+        ]
         fetched_icons = download_icons(results)
         updated, changes, removed, icon_changes = apply_corrections(servers, results, fetched_icons)
         SERVERS_FILE.write_text(
@@ -766,7 +785,10 @@ async def run(args: argparse.Namespace) -> int:
         )
         prune_orphan_icons(updated)
 
-    report = render_report(results, changes, removed, icon_changes, icons_checked=args.apply, scope=scope)
+    report = render_report(
+        results, changes, removed, icon_changes,
+        icons_checked=args.apply, scope=scope, harvest_failures=harvest_failures,
+    )
     print(json.dumps([asdict(r) for r in results], indent=2))
     if args.report:
         Path(args.report).write_text(report, encoding="utf-8")
