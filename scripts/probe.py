@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# requires-python = ">=3.11"
+# requires-python = ">=3.12"
 # dependencies = ["websockets>=14"]
 # ///
 """Connectivity + capability probe for the ObsidianIRC server list.
@@ -49,6 +49,7 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+from collections.abc import Awaitable, Callable, Iterable
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -68,12 +69,27 @@ OBBY_VENDOR_PREFIXES = ("obsidianirc/", "obby.world/")
 # `ICON`; servers run either, so accept both (final preferred when both appear).
 ICON_ISUPPORT_TOKENS = ("ICON", "draft/ICON")
 
+# The icon URL may carry a {size} placeholder for the desired pixel size; the
+# Discover page shows a small avatar, so request a modest one.
+ICON_SIZE = "128"
+
+# An ISUPPORT value escapes reserved bytes as \xHH (e.g. \x3D for '=').
+_ISUPPORT_ESCAPE = re.compile(r"\\x([0-9A-Fa-f]{2})")
+
 # Canonical key order so --apply keeps servers.json tidy and new fields land in
 # a predictable place rather than at the end of each object.
 FIELD_ORDER = ("name", "description", "wss", "ircs", "obsidian", "sasl", "voice", "icon")
 
 DEFAULT_TIMEOUT = 12.0
 DEFAULT_IRCS_PORT = 6697
+DEFAULT_HTTPS_PORT = 443
+
+# Cap how many servers are probed at once.  Every probe reaches out from the same
+# runner IP, so a smaller burst is less likely to trip per-IP connection
+# throttling (which shows up as registration timeouts) and bounds load as the
+# list grows.  Each server opens up to two transports, so the connection count
+# is up to twice this.
+MAX_CONCURRENCY = 8
 
 # A real browser WebSocket always sends an Origin header, and some IRC
 # WebSocket gateways reject upgrades without one (HTTP 403).  Mirroring the
@@ -86,6 +102,13 @@ WSS_USER_AGENT = "Mozilla/5.0 (compatible; ObsidianIRC-probe/1.0)"
 # the URL, decides the on-disk extension.
 MAX_ICON_BYTES = 512 * 1024
 ICON_FETCH_TIMEOUT = 15.0
+
+# Registration is heavier than capability detection and, run right after the
+# connectivity probe, can exceed the connectivity timeout on a slow/throttled
+# link.  Give the icon harvest its own longer budget and a few attempts so a
+# transient miss doesn't leave a server iconless until the next crawl.
+ICON_HARVEST_TIMEOUT = 20.0
+ICON_HARVEST_ATTEMPTS = 3
 CONTENT_TYPE_EXT = {
     "image/png": ".png",
     "image/jpeg": ".jpg",
@@ -118,6 +141,7 @@ class TransportProbe:
     error: str | None
     caps: dict[str, str]
     isupport: dict[str, str]
+    complete: bool = False
 
 
 @dataclass
@@ -209,10 +233,12 @@ class Negotiator:
             for token in params:
                 name, _, value = token.partition("=")
                 self.isupport[name] = value
-        elif code == "433" and self._nick_tries < 3:
-            self._nick_tries += 1
-            self.nick = f"{self.nick[:6]}{self._nick_tries}"
-            return [f"NICK {self.nick}"]
+        elif code == "433":
+            if self._nick_tries < 3:
+                self._nick_tries += 1
+                self.nick = f"{self.nick[:6]}{self._nick_tries}"
+                return [f"NICK {self.nick}"]
+            self.finished = True
         elif code in self._REGISTRATION_END:
             self.finished = True
         return []
@@ -227,13 +253,19 @@ def detect(caps: dict[str, str]) -> Detection:
     )
 
 
+def _normalize_icon_url(value: str) -> str:
+    """Decode ISUPPORT \\xHH escapes and fill the optional {size} placeholder."""
+    decoded = _ISUPPORT_ESCAPE.sub(lambda m: chr(int(m.group(1), 16)), value)
+    return decoded.replace("{size}", ICON_SIZE)
+
+
 def icon_url_from(isupport: dict[str, str]) -> str | None:
     """ISUPPORT token names are case-insensitive, so fold before matching."""
     folded = {name.casefold(): value for name, value in isupport.items()}
     for token in ICON_ISUPPORT_TOKENS:
         value = folded.get(token.casefold())
         if value:
-            return value
+            return _normalize_icon_url(value)
     return None
 
 
@@ -256,7 +288,7 @@ RETRY_BACKOFF = 0.75
 DETERMINISTIC_ERROR = "CERTIFICATE_VERIFY_FAILED"
 
 
-async def _with_retries(attempt) -> TransportProbe:
+async def _with_retries(attempt: Callable[[], Awaitable[TransportProbe]]) -> TransportProbe:
     result = await attempt()
     for i in range(1, TRANSPORT_ATTEMPTS):
         if result.reachable or (result.error and DETERMINISTIC_ERROR in result.error):
@@ -266,14 +298,18 @@ async def _with_retries(attempt) -> TransportProbe:
     return result
 
 
-def _first_non_public(infos) -> str | None:
+def _first_non_public(addresses: Iterable[str]) -> str | None:
     """The shared SSRF rule: every address a host resolves to must be globally
-    routable.  Returns the first loopback/private/link-local/reserved address
-    (e.g. cloud metadata at 169.254.169.254), or None if all are public."""
-    for info in infos:
-        ip = ipaddress.ip_address(info[4][0])
-        if not ip.is_global:
-            return str(ip)
+    routable.  Returns the first non-routable or unparseable address (e.g. cloud
+    metadata at 169.254.169.254, or a scoped link-local), or None if all are
+    public.  Unparseable addresses fail closed -- refused rather than trusted."""
+    for address in addresses:
+        try:
+            is_public = ipaddress.ip_address(address).is_global
+        except ValueError:
+            return address
+        if not is_public:
+            return address
     return None
 
 
@@ -285,7 +321,8 @@ async def _non_public_target(host: str, port: int) -> str | None:
     runner to reach internal addresses.
     """
     loop = asyncio.get_running_loop()
-    bad = _first_non_public(await loop.getaddrinfo(host, port, type=socket.SOCK_STREAM))
+    infos = await loop.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    bad = _first_non_public(str(info[4][0]) for info in infos)
     return f"refused non-public address {bad}" if bad else None
 
 
@@ -309,7 +346,7 @@ async def probe_wss(url: str, timeout: float, register: bool) -> TransportProbe:
 async def _attempt_wss(url: str, timeout: float, register: bool) -> TransportProbe:
     nego = Negotiator(_registration_nick(), register)
     error: str | None = None
-    host, port, url_error = _host_port(url, 443)
+    host, port, url_error = _host_port(url, DEFAULT_HTTPS_PORT)
     if url_error:
         return TransportProbe("wss", url, False, url_error, {}, {})
     origin = Origin(f"https://{host}") if host else None
@@ -338,7 +375,7 @@ async def _attempt_wss(url: str, timeout: float, register: bool) -> TransportPro
         error = f"{type(exc).__name__}: {exc}".strip()
     if not nego.caps_done and error is None:
         error = "connection closed before capability list"
-    return TransportProbe("wss", url, nego.caps_done, error, nego.caps, nego.isupport)
+    return TransportProbe("wss", url, nego.caps_done, error, nego.caps, nego.isupport, nego.finished)
 
 
 async def probe_ircs(url: str, timeout: float, register: bool) -> TransportProbe:
@@ -386,7 +423,7 @@ async def _attempt_ircs(url: str, timeout: float, register: bool) -> TransportPr
                 pass
     if not nego.caps_done and error is None:
         error = "connection closed before capability list"
-    return TransportProbe("ircs", url, nego.caps_done, error, nego.caps, nego.isupport)
+    return TransportProbe("ircs", url, nego.caps_done, error, nego.caps, nego.isupport, nego.finished)
 
 
 async def probe_server(entry: dict, timeout: float) -> ServerResult:
@@ -423,19 +460,33 @@ async def harvest_icon(entry: dict, timeout: float) -> str | None:
     advertised URL is authoritative, so a server that publishes an icon wins
     over a hand-added one; a hand-added icon survives only while the server
     advertises none.
+
+    A completed registration is authoritative for "no icon", so we only retry
+    when *no* transport finished registering -- a genuine no-icon server (zeolia,
+    mIRCClub) returns after one pass instead of being re-hammered, while a
+    transport that was cut off mid-burst is retried.
     """
-    coros = []
-    if entry.get("wss"):
-        coros.append(probe_wss(entry["wss"], timeout, register=True))
-    if entry.get("ircs"):
-        coros.append(probe_ircs(entry["ircs"], timeout, register=True))
+    for attempt in range(ICON_HARVEST_ATTEMPTS):
+        coros = []
+        if entry.get("wss"):
+            coros.append(probe_wss(entry["wss"], timeout, register=True))
+        if entry.get("ircs"):
+            coros.append(probe_ircs(entry["ircs"], timeout, register=True))
 
-    probes = await asyncio.gather(*coros)
+        probes = await asyncio.gather(*coros)
 
-    merged_isupport: dict[str, str] = {}
-    for probe in probes:
-        merged_isupport.update(probe.isupport)
-    return icon_url_from(merged_isupport)
+        merged_isupport: dict[str, str] = {}
+        registered = False
+        for probe in probes:
+            merged_isupport.update(probe.isupport)
+            registered = registered or probe.complete
+
+        url = icon_url_from(merged_isupport)
+        if url or registered:
+            return url
+        if attempt < ICON_HARVEST_ATTEMPTS - 1:
+            await asyncio.sleep(RETRY_BACKOFF * (attempt + 1))
+    return None
 
 
 def load_servers() -> list[dict]:
@@ -457,12 +508,12 @@ def changed_servers(servers: list[dict], base_ref: str) -> list[dict]:
         base_by_name = {s.get("name"): s for s in json.loads(base_json)}
     except (subprocess.CalledProcessError, json.JSONDecodeError):
         return servers
-    return [
-        s for s in servers
-        if base_by_name.get(s.get("name")) is None
-        or base_by_name[s["name"]].get("wss") != s.get("wss")
-        or base_by_name[s["name"]].get("ircs") != s.get("ircs")
-    ]
+    changed = []
+    for s in servers:
+        base = base_by_name.get(s.get("name"))
+        if base is None or base.get("wss") != s.get("wss") or base.get("ircs") != s.get("ircs"):
+            changed.append(s)
+    return changed
 
 
 def reorder(entry: dict) -> dict:
@@ -483,7 +534,8 @@ def slugify(name: str) -> str:
 
 
 def _icon_target_is_public(host: str, port: int) -> bool:
-    return _first_non_public(socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)) is None
+    infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    return _first_non_public(str(info[4][0]) for info in infos) is None
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -504,7 +556,7 @@ def fetch_icon(url: str) -> FetchedIcon | None:
     or not a recognized image type."""
     try:
         parsed = urlsplit(url)
-        host, port = parsed.hostname, parsed.port or 443
+        host, port = parsed.hostname, parsed.port or DEFAULT_HTTPS_PORT
     except ValueError:
         return None
     if parsed.scheme != "https" or not host:
@@ -674,6 +726,17 @@ def render_report(
     return "\n".join(lines) + "\n"
 
 
+async def _gather_limited[T](limit: int, coros: list[Awaitable[T]]) -> list[T]:
+    """Run coroutines with at most `limit` in flight, preserving input order."""
+    sem = asyncio.Semaphore(limit)
+
+    async def _run(coro: Awaitable[T]) -> T:
+        async with sem:
+            return await coro
+
+    return await asyncio.gather(*(_run(c) for c in coros))
+
+
 async def run(args: argparse.Namespace) -> int:
     servers = load_servers()
 
@@ -683,13 +746,17 @@ async def run(args: argparse.Namespace) -> int:
         to_probe = changed_servers(servers, args.base)
         scope = f"Scope: {len(to_probe)} server(s) changed vs `{args.base}`"
 
-    results = list(await asyncio.gather(*(probe_server(s, args.timeout) for s in to_probe)))
+    results = list(
+        await _gather_limited(MAX_CONCURRENCY, [probe_server(s, args.timeout) for s in to_probe])
+    )
 
     changes: list[str] = []
     removed: list[str] = []
     icon_changes: list[str] = []
     if args.apply:
-        icon_urls = await asyncio.gather(*(harvest_icon(s, args.timeout) for s in to_probe))
+        icon_urls = await _gather_limited(
+            MAX_CONCURRENCY, [harvest_icon(s, ICON_HARVEST_TIMEOUT) for s in to_probe]
+        )
         for result, icon_url in zip(results, icon_urls):
             result.icon_url = icon_url
         fetched_icons = download_icons(results)
