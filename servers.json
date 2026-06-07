@@ -4,49 +4,67 @@
     "description": "A cool place for tech talk, randomness and nerding.",
     "wss": "wss://irc.h4ks.com:443",
     "ircs": "ircs://irc.h4ks.com:6697",
-    "obsidian": false
+    "obsidian": true,
+    "sasl": true,
+    "voice": true,
+    "icon": "server-icons/h4ks-com.png"
   },
   {
     "name": "UnrealIRCd Support & Test Network",
     "description": "Get help with UnrealIRCd configuration, installation and usage.",
     "wss": "wss://irc.unrealircd.org:443",
     "ircs": "ircs://irc.unrealircd.org:6697",
-    "obsidian": false
+    "obsidian": false,
+    "sasl": true,
+    "voice": false
   },
   {
     "name": "InspIRCd Test Network",
     "description": "InspIRCd's Test Network for testing IRCv3 things.",
     "wss": "wss://testnet.inspircd.org:8097",
     "ircs": "ircs://testnet.inspircd.org:6697",
-    "obsidian": false
+    "obsidian": false,
+    "sasl": true,
+    "voice": false,
+    "icon": "server-icons/inspircd-test-network.png"
   },
   {
     "name": "Ergo Test Network",
     "description": "Ergo's Test Network for testing IRCv3 things.",
     "wss": "wss://testnet.ergo.chat:8097",
     "ircs": "ircs://testnet.ergo.chat:6697",
-    "obsidian": false
+    "obsidian": false,
+    "sasl": true,
+    "voice": false,
+    "icon": "server-icons/ergo-test-network.ico"
   },
   {
     "name": "zeolia.chat",
     "description": "French small network, #eggdrop and #linux :)",
     "wss": "wss://irc.zeolia.chat:8000",
     "ircs": "ircs://irc.zeolia.chat:6697",
-    "obsidian": false
+    "obsidian": false,
+    "sasl": true,
+    "voice": false
   },
   {
     "name": "PTirc IRC Network",
     "description": "Multi purpose chat network.",
     "wss": "wss://irc.ptirc.org:7666",
     "ircs": "ircs://irc.ptirc.org:6697",
-    "obsidian": false
+    "obsidian": false,
+    "sasl": true,
+    "voice": false,
+    "icon": "server-icons/ptirc-irc-network.png"
   },
   {
     "name": "mIRCClub",
     "description": "We are more than just a server.",
     "wss": "wss://irc.mirc.club:8000/",
     "ircs": "ircs://irc.mirc.club:6697",
-    "obsidian": false
+    "obsidian": false,
+    "sasl": true,
+    "voice": false
   },
   {
     "name": "2600net",
