@@ -36,6 +36,25 @@ second connection per server that daemons reject.  The icon is downloaded into
 server-icons/ and rewritten only when it actually changed, so the list tracks
 the server's current icon without needless churn; the field is left empty for
 servers that advertise none.
+
+Running it:
+
+  CI PR validation:  uv run scripts/probe.py --check --base origin/main
+  CI daily crawl:    uv run scripts/probe.py --apply --report crawl-report.md
+
+Run it locally to update servers.json and server-icons/ in place, then review
+the diff and commit:
+
+  uv run scripts/probe.py --apply            # add/update caps + icons, write
+  uv run scripts/probe.py --apply --dry      # preview the changes, write nothing
+
+This is the reliable way to pick up an icon the CI crawl keeps missing: some
+networks rate limit or block the shared GitHub Actions IP (UnrealIRCd's test
+net, for one), so their icon registers fine from a normal connection but not
+from the runner.  `--apply` only adds and updates -- it never removes a server
+or an icon, so a server that looks unreachable from where you run it is left
+untouched, not dropped.  Add `--prune` to also drop servers that are genuinely
+gone (use only from a trusted local connection, never in CI).
 """
 import argparse
 import asyncio
@@ -626,16 +645,17 @@ def prune_orphan_icons(servers: list[dict]) -> None:
 
 
 def apply_corrections(
-    servers: list[dict], results: list[ServerResult], fetched_icons: dict[str, str]
+    servers: list[dict], results: list[ServerResult], fetched_icons: dict[str, str], prune: bool = False
 ) -> tuple[list[dict], list[str], list[str], list[str]]:
     """Returns (updated servers, capability changes, removed names, icon changes).
 
-    Servers that answered on neither transport are dropped from the list; the
-    crawl opens this as a PR so a human reviews every removal before it lands.
-    An icon is only set when a fresh one was downloaded this run -- a server
-    whose icon could not be re-fetched keeps the one it already had rather than
-    losing it, since the icon harvest is best-effort.  Files for dropped servers
-    are reclaimed separately by prune_orphan_icons.
+    Only ever adds or updates: an icon is set when a fresh one was downloaded
+    this run, and a server whose icon could not be re-fetched keeps the one it
+    already had.  Nothing is removed unless `prune` is set -- the default crawl
+    never drops a server or an icon, so a network that blocks the runner's IP
+    (and so looks unreachable from CI) can't propose deleting a live entry.
+    With `prune`, servers unreachable from where this ran are dropped (use only
+    from a trusted local connection).
     """
     by_name = {r.name: r for r in results}
     changes: list[str] = []
@@ -645,7 +665,7 @@ def apply_corrections(
     for entry in servers:
         name = entry.get("name")
         result = by_name.get(name) if isinstance(name, str) else None
-        if result is not None and not result.any_reachable:
+        if prune and result is not None and not result.any_reachable:
             removed.append(result.name)
             continue
         if result is not None and result.detected is not None:
@@ -763,12 +783,19 @@ async def run(args: argparse.Namespace) -> int:
             for (result, failures), entry in zip(pairs, to_probe)
             if result.icon_url is None and failures
         ]
-        fetched_icons = download_icons(results)
-        updated, changes, removed, icon_changes = apply_corrections(servers, results, fetched_icons)
-        SERVERS_FILE.write_text(
-            json.dumps(updated, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-        )
-        prune_orphan_icons(updated)
+        if args.dry:
+            _, changes, removed, _ = apply_corrections(servers, results, {}, prune=args.prune)
+            icon_changes = [f"{r.name}: would fetch icon {r.icon_url}" for r in results if r.icon_url]
+        else:
+            fetched_icons = download_icons(results)
+            updated, changes, removed, icon_changes = apply_corrections(
+                servers, results, fetched_icons, prune=args.prune
+            )
+            SERVERS_FILE.write_text(
+                json.dumps(updated, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+            )
+            if args.prune:
+                prune_orphan_icons(updated)
     else:
         results = list(
             await _gather_limited(MAX_CONCURRENCY, [probe_server(s, args.timeout) for s in to_probe])
@@ -794,7 +821,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Probe ObsidianIRC server list connectivity and caps")
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT, help="per-endpoint timeout in seconds")
     parser.add_argument("--report", help="write a Markdown report to this path")
-    parser.add_argument("--apply", action="store_true", help="write detected caps + icons back into servers.json")
+    parser.add_argument("--apply", action="store_true", help="write detected caps + icons back into servers.json (adds/updates only)")
+    parser.add_argument("--dry", action="store_true", help="with --apply, report what would change without writing or downloading")
+    parser.add_argument("--prune", action="store_true", help="with --apply, also drop servers unreachable from here and their icon files (run only from a trusted local connection)")
     parser.add_argument("--check", action="store_true", help="exit non-zero if any probed endpoint is unreachable")
     parser.add_argument("--base", help="git ref to diff against; only probe servers whose transport changed")
     args = parser.parse_args()
