@@ -96,10 +96,6 @@ ICON_SIZE = "128"
 # An ISUPPORT value escapes reserved bytes as \xHH (e.g. \x3D for '=').
 _ISUPPORT_ESCAPE = re.compile(r"\\x([0-9A-Fa-f]{2})")
 
-# Canonical key order so --apply keeps servers.json tidy and new fields land in
-# a predictable place rather than at the end of each object.
-FIELD_ORDER = ("name", "description", "wss", "ircs", "obsidian", "sasl", "voice", "icon")
-
 DEFAULT_TIMEOUT = 12.0
 DEFAULT_IRCS_PORT = 6697
 DEFAULT_HTTPS_PORT = 443
@@ -182,6 +178,25 @@ class ServerResult:
 class FetchedIcon:
     data: bytes
     ext: str
+
+
+@dataclass
+class Server:
+    """A servers.json entry.  Field order is the on-disk JSON key order; absent
+    optionals are dropped on write so the file stays as terse as a contributor
+    left it."""
+
+    name: str = ""
+    description: str | None = None
+    wss: str | None = None
+    ircs: str | None = None
+    obsidian: bool | None = None
+    sasl: bool | None = None
+    voice: bool | None = None
+    icon: str | None = None
+
+
+_SERVER_FIELDS = {f.name for f in fields(Server)}
 
 
 class Negotiator:
@@ -443,12 +458,12 @@ async def _attempt_ircs(url: str, timeout: float, register: bool) -> TransportPr
     return TransportProbe("ircs", url, nego.caps_done, error, nego.caps, nego.isupport, nego.finished)
 
 
-async def probe_server(entry: dict, timeout: float) -> ServerResult:
+async def probe_server(entry: Server, timeout: float) -> ServerResult:
     coros = []
-    if entry.get("wss"):
-        coros.append(probe_wss(entry["wss"], timeout, register=False))
-    if entry.get("ircs"):
-        coros.append(probe_ircs(entry["ircs"], timeout, register=False))
+    if entry.wss:
+        coros.append(probe_wss(entry.wss, timeout, register=False))
+    if entry.ircs:
+        coros.append(probe_ircs(entry.ircs, timeout, register=False))
 
     probes = await asyncio.gather(*coros)
 
@@ -459,7 +474,7 @@ async def probe_server(entry: dict, timeout: float) -> ServerResult:
 
     any_reachable = any(p.reachable for p in probes)
     return ServerResult(
-        name=entry.get("name", "?"),
+        name=entry.name or "?",
         endpoints=[EndpointStatus(p.transport, p.url, p.reachable, p.error) for p in probes],
         any_reachable=any_reachable,
         detected=detect(merged_caps) if any_reachable else None,
@@ -467,7 +482,7 @@ async def probe_server(entry: dict, timeout: float) -> ServerResult:
     )
 
 
-async def crawl_server(entry: dict, timeout: float) -> tuple[ServerResult, list[str]]:
+async def crawl_server(entry: Server, timeout: float) -> tuple[ServerResult, list[str]]:
     """One registering pass per server: reachability, capabilities, and the
     network-icon URL from a single connection per transport.
 
@@ -481,10 +496,10 @@ async def crawl_server(entry: dict, timeout: float) -> tuple[ServerResult, list[
     return value lists transports whose registration failed, for the report.
     """
     coros = []
-    if entry.get("wss"):
-        coros.append(_attempt_wss(entry["wss"], timeout, True))
-    if entry.get("ircs"):
-        coros.append(_attempt_ircs(entry["ircs"], timeout, True))
+    if entry.wss:
+        coros.append(_attempt_wss(entry.wss, timeout, True))
+    if entry.ircs:
+        coros.append(_attempt_ircs(entry.ircs, timeout, True))
 
     probes = await asyncio.gather(*coros)
 
@@ -497,7 +512,7 @@ async def crawl_server(entry: dict, timeout: float) -> tuple[ServerResult, list[
 
     any_reachable = any(p.reachable for p in probes)
     result = ServerResult(
-        name=entry.get("name", "?"),
+        name=entry.name or "?",
         endpoints=[EndpointStatus(p.transport, p.url, p.reachable, p.error) for p in probes],
         any_reachable=any_reachable,
         detected=detect(merged_caps) if any_reachable else None,
@@ -507,11 +522,22 @@ async def crawl_server(entry: dict, timeout: float) -> tuple[ServerResult, list[
     return result, failures
 
 
-def load_servers() -> list[dict]:
-    return json.loads(SERVERS_FILE.read_text(encoding="utf-8"))
+def _to_server(raw: dict) -> Server:
+    return Server(**{k: v for k, v in raw.items() if k in _SERVER_FIELDS})
 
 
-def changed_servers(servers: list[dict], base_ref: str) -> list[dict]:
+def load_servers() -> list[Server]:
+    return [_to_server(raw) for raw in json.loads(SERVERS_FILE.read_text(encoding="utf-8"))]
+
+
+def dump_servers(servers: list[Server]) -> str:
+    """Serialize back to servers.json, dropping absent (None) optionals so the
+    file isn't littered with nulls and stays diff-friendly."""
+    payload = [{k: v for k, v in asdict(s).items() if v is not None} for s in servers]
+    return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
+
+
+def changed_servers(servers: list[Server], base_ref: str) -> list[Server]:
     """Entries whose connectivity changed versus a git ref.
 
     Only new servers or edits to a transport URL warrant re-probing; a
@@ -523,23 +549,15 @@ def changed_servers(servers: list[dict], base_ref: str) -> list[dict]:
             ["git", "show", f"{base_ref}:servers.json"],
             capture_output=True, text=True, cwd=REPO_ROOT, check=True,
         ).stdout
-        base_by_name = {s.get("name"): s for s in json.loads(base_json)}
+        base_by_name = {srv.name: srv for srv in (_to_server(raw) for raw in json.loads(base_json))}
     except (subprocess.CalledProcessError, json.JSONDecodeError):
         return servers
     changed = []
     for s in servers:
-        base = base_by_name.get(s.get("name"))
-        if base is None or base.get("wss") != s.get("wss") or base.get("ircs") != s.get("ircs"):
+        base = base_by_name.get(s.name)
+        if base is None or base.wss != s.wss or base.ircs != s.ircs:
             changed.append(s)
     return changed
-
-
-def reorder(entry: dict) -> dict:
-    ordered = {k: entry[k] for k in FIELD_ORDER if k in entry}
-    for k, v in entry.items():
-        if k not in ordered:
-            ordered[k] = v
-    return ordered
 
 
 def failure_reason(result: ServerResult) -> str:
@@ -628,7 +646,7 @@ def download_icons(results: list[ServerResult]) -> dict[str, str]:
     return paths
 
 
-def prune_orphan_icons(servers: list[dict]) -> None:
+def prune_orphan_icons(servers: list[Server]) -> None:
     """Delete files in server-icons/ that no entry references, so a removed
     server -- or an icon whose filename changed -- leaves nothing behind.
 
@@ -638,15 +656,15 @@ def prune_orphan_icons(servers: list[dict]) -> None:
     """
     if not ICON_DIR.is_dir():
         return
-    referenced = {Path(s["icon"]).name for s in servers if s.get("icon")}
+    referenced = {Path(s.icon).name for s in servers if s.icon}
     for existing in ICON_DIR.iterdir():
         if existing.is_file() and not existing.name.startswith(".") and existing.name not in referenced:
             existing.unlink()
 
 
 def apply_corrections(
-    servers: list[dict], results: list[ServerResult], fetched_icons: dict[str, str], prune: bool = False
-) -> tuple[list[dict], list[str], list[str], list[str]]:
+    servers: list[Server], results: list[ServerResult], fetched_icons: dict[str, str], prune: bool = False
+) -> tuple[list[Server], list[str], list[str], list[str]]:
     """Returns (updated servers, capability changes, removed names, icon changes).
 
     Only ever adds or updates: an icon is set when a fresh one was downloaded
@@ -661,25 +679,24 @@ def apply_corrections(
     changes: list[str] = []
     removed: list[str] = []
     icon_changes: list[str] = []
-    updated: list[dict] = []
+    updated: list[Server] = []
     for entry in servers:
-        name = entry.get("name")
-        result = by_name.get(name) if isinstance(name, str) else None
+        result = by_name.get(entry.name)
         if prune and result is not None and not result.any_reachable:
             removed.append(result.name)
             continue
         if result is not None and result.detected is not None:
-            for field in fields(Detection):
-                value = getattr(result.detected, field.name)
-                if entry.get(field.name) != value:
-                    changes.append(f"{entry['name']}: {field.name} {entry.get(field.name)} -> {value}")
-                    entry[field.name] = value
+            for caps_field in fields(Detection):
+                detected = getattr(result.detected, caps_field.name)
+                if getattr(entry, caps_field.name) != detected:
+                    changes.append(f"{entry.name}: {caps_field.name} {getattr(entry, caps_field.name)} -> {detected}")
+                    setattr(entry, caps_field.name, detected)
         if result is not None:
             fetched_icon = fetched_icons.get(result.name)
-            if fetched_icon and fetched_icon != entry.get("icon"):
-                icon_changes.append(f"{result.name}: icon {entry.get('icon')} -> {fetched_icon}")
-                entry["icon"] = fetched_icon
-        updated.append(reorder(entry))
+            if fetched_icon and fetched_icon != entry.icon:
+                icon_changes.append(f"{result.name}: icon {entry.icon} -> {fetched_icon}")
+                entry.icon = fetched_icon
+        updated.append(entry)
     return updated, changes, removed, icon_changes
 
 
@@ -779,7 +796,7 @@ async def run(args: argparse.Namespace) -> int:
         )
         results = [result for result, _ in pairs]
         harvest_failures = [
-            (entry.get("name", "?"), failures)
+            (entry.name or "?", failures)
             for (result, failures), entry in zip(pairs, to_probe)
             if result.icon_url is None and failures
         ]
@@ -791,9 +808,7 @@ async def run(args: argparse.Namespace) -> int:
             updated, changes, removed, icon_changes = apply_corrections(
                 servers, results, fetched_icons, prune=args.prune
             )
-            SERVERS_FILE.write_text(
-                json.dumps(updated, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-            )
+            SERVERS_FILE.write_text(dump_servers(updated), encoding="utf-8")
             if args.prune:
                 prune_orphan_icons(updated)
     else:
