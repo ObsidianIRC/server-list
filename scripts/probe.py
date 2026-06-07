@@ -25,9 +25,9 @@ hostname-matching TLS certificate: a self-signed or mismatched cert means the
 real client cannot connect either, so it disqualifies the server and the TLS
 error is recorded as the reason (surfaced in the PR / removal proposal).
 
-Server icons follow the IRCv3 network-icon draft: a server publishes its icon
-as a `draft/ICON=<url>` ISUPPORT token (the RPL_ISUPPORT 005 burst), which is
-only sent after connection registration.  Capability detection deliberately
+Server icons follow the IRCv3 network-icon spec: a server publishes its icon as
+an `ICON=<url>` (or work-in-progress `draft/ICON=<url>`) ISUPPORT token in the
+RPL_ISUPPORT 005 burst, which is only sent after connection registration.  Capability detection deliberately
 stops at `CAP LS` and never registers, so icon collection is a separate,
 heavier mode used only by the daily crawl (`--apply`): there the probe also
 sends `CAP END` + NICK/USER, reads the welcome burst, extracts the icon URL,
@@ -63,8 +63,10 @@ ICON_DIR = REPO_ROOT / "server-icons"
 VOICE_CAPS = ("obsidianirc/voice", "obby.world/voice")
 OBBY_VENDOR_PREFIXES = ("obsidianirc/", "obby.world/")
 
-# IRCv3 network-icon draft: the icon URL is advertised as this ISUPPORT token.
-ICON_ISUPPORT_TOKEN = "draft/ICON"
+# IRCv3 network-icon: the icon URL is advertised as an ISUPPORT token.  The spec
+# is migrating from the work-in-progress `draft/ICON` to the final unprefixed
+# `ICON`; servers run either, so accept both (final preferred when both appear).
+ICON_ISUPPORT_TOKENS = ("ICON", "draft/ICON")
 
 # Canonical key order so --apply keeps servers.json tidy and new fields land in
 # a predictable place rather than at the end of each object.
@@ -226,10 +228,12 @@ def detect(caps: dict[str, str]) -> Detection:
 
 
 def icon_url_from(isupport: dict[str, str]) -> str | None:
-    """ISUPPORT token names are case-insensitive, so match draft/ICON loosely."""
-    for name, value in isupport.items():
-        if name.casefold() == ICON_ISUPPORT_TOKEN.casefold():
-            return value or None
+    """ISUPPORT token names are case-insensitive, so fold before matching."""
+    folded = {name.casefold(): value for name, value in isupport.items()}
+    for token in ICON_ISUPPORT_TOKENS:
+        value = folded.get(token.casefold())
+        if value:
+            return value
     return None
 
 
@@ -410,7 +414,7 @@ async def probe_server(entry: dict, timeout: float) -> ServerResult:
 
 
 async def harvest_icon(entry: dict, timeout: float) -> str | None:
-    """Best-effort icon URL from the IRCv3 draft/ICON ISUPPORT token.
+    """Best-effort icon URL from the IRCv3 network-icon ISUPPORT token.
 
     Reading ISUPPORT requires completing registration -- a heavier handshake
     than capability detection that some daemons throttle -- so it runs only
