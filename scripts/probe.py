@@ -107,10 +107,15 @@ DEFAULT_HTTPS_PORT = 443
 # is up to twice this.
 MAX_CONCURRENCY = 8
 
-# A real browser WebSocket always sends an Origin header, and some IRC
-# WebSocket gateways reject upgrades without one (HTTP 403).  Mirroring the
-# Discover page's browser client avoids spurious "unreachable" verdicts.
-WSS_USER_AGENT = "Mozilla/5.0 (compatible; ObsidianIRC-probe/1.0)"
+# Mirror the Discover page's browser client: a real Origin header (some IRC
+# WebSocket gateways 403 without one) and a real browser User-Agent (a bot UA
+# gets challenged by the bot protection in front of some icon hosts, e.g. the
+# Cloudflare-fronted www.unrealircd.org).  This does not help against per-IP
+# blocks on the IRC server itself -- those need a non-datacenter IP (run locally).
+BROWSER_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+)
 
 # Browsers refuse to load an http image on the https Discover page (mixed
 # content), so an http icon URL is useless to us; require https.  Servers are
@@ -394,7 +399,7 @@ async def _attempt_wss(url: str, timeout: float, register: bool) -> TransportPro
                 close_timeout=3,
                 max_size=None,
                 origin=origin,
-                user_agent_header=WSS_USER_AGENT,
+                user_agent_header=BROWSER_USER_AGENT,
             ) as ws:
                 await ws.send(_initial_send(nego.nick, register))
                 while not nego.finished:
@@ -600,7 +605,7 @@ def fetch_icon(url: str) -> FetchedIcon | None:
     try:
         if not _icon_target_is_public(host, port):
             return None
-        request = urllib.request.Request(url, headers={"User-Agent": WSS_USER_AGENT})
+        request = urllib.request.Request(url, headers={"User-Agent": BROWSER_USER_AGENT})
         with _ICON_OPENER.open(request, timeout=ICON_FETCH_TIMEOUT) as response:
             ext = CONTENT_TYPE_EXT.get(response.headers.get_content_type())
             if ext is None:
