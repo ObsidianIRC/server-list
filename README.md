@@ -1,5 +1,5 @@
-# ObsidianIRC's Servers List
-This is where ObsidianIRC's server list on the 'Discover' reads from.
+# Obby's Servers List
+This is where Obby's server list on the 'Discover' reads from.
 
 ### So, how do you get listed? It's so easy!
 ## Making a PR (Pull Request)
