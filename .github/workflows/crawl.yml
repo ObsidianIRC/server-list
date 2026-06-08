@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '17 4 * * *'
   workflow_dispatch:
+    inputs:
+      prune:
+        description: 'Also propose removing servers unreachable on every transport'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -22,7 +27,7 @@ jobs:
           enable-cache: true
 
       - name: Crawl servers and apply capability + icon corrections
-        run: uv run scripts/probe.py --apply --report crawl-report.md
+        run: uv run scripts/probe.py --apply ${{ inputs.prune && '--prune' || '' }} --report crawl-report.md
 
       - name: Open pull request with detected changes
         if: ${{ !env.ACT }}

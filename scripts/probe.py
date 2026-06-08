@@ -53,8 +53,10 @@ networks rate limit or block the shared GitHub Actions IP (UnrealIRCd's test
 net, for one), so their icon registers fine from a normal connection but not
 from the runner.  `--apply` only adds and updates -- it never removes a server
 or an icon, so a server that looks unreachable from where you run it is left
-untouched, not dropped.  Add `--prune` to also drop servers that are genuinely
-gone (use only from a trusted local connection, never in CI).
+untouched, not dropped.  Add `--prune` to also propose removing servers
+unreachable on every transport; the unreachable verdict is re-confirmed with
+the caps-only probe (which datacenter-IP blocks let through), so a register-pass
+block can't cause a false removal -- safe to run in CI behind a manual trigger.
 """
 import argparse
 import asyncio
@@ -805,6 +807,19 @@ async def run(args: argparse.Namespace) -> int:
             for (result, failures), entry in zip(pairs, to_probe)
             if result.icon_url is None and failures
         ]
+        if args.prune:
+            # The register pass can be refused at the connection level by a
+            # server's anti-abuse on a datacenter IP, so a live server can look
+            # unreachable from CI.  Before proposing removal, re-probe each
+            # unreachable candidate with the lightweight caps-only client those
+            # defenses let through, and trust its verdict instead.
+            candidates = [(e, r) for e, r in zip(to_probe, results) if not r.any_reachable]
+            confirmations = await _gather_limited(
+                MAX_CONCURRENCY, [probe_server(entry, args.timeout) for entry, _ in candidates]
+            )
+            for (_, result), confirmed in zip(candidates, confirmations):
+                result.any_reachable = confirmed.any_reachable
+                result.endpoints = confirmed.endpoints
         if args.dry:
             _, changes, removed, _ = apply_corrections(servers, results, {}, prune=args.prune)
             icon_changes = [f"{r.name}: would fetch icon {r.icon_url}" for r in results if r.icon_url]
@@ -843,7 +858,7 @@ def main() -> int:
     parser.add_argument("--report", help="write a Markdown report to this path")
     parser.add_argument("--apply", action="store_true", help="write detected caps + icons back into servers.json (adds/updates only)")
     parser.add_argument("--dry", action="store_true", help="with --apply, report what would change without writing or downloading")
-    parser.add_argument("--prune", action="store_true", help="with --apply, also drop servers unreachable from here and their icon files (run only from a trusted local connection)")
+    parser.add_argument("--prune", action="store_true", help="with --apply, propose removing servers unreachable on every transport (re-confirmed with a caps-only probe, so a register-pass block can't cause a false removal)")
     parser.add_argument("--check", action="store_true", help="exit non-zero if any probed endpoint is unreachable")
     parser.add_argument("--base", help="git ref to diff against; only probe servers whose transport changed")
     args = parser.parse_args()
