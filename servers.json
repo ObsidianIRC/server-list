@@ -40,6 +40,16 @@
     "icon": "server-icons/ergo-test-network.ico"
   },
   {
+    "name": "ram munchers network",
+    "description": "Niche micro-community, started as a way to not submit ids to discord and still chat with friends!",
+    "wss": "wss://wss.randomaccessmemory.download:6655",
+    "ircs": "ircs://irc.randomaccessmemory.download:6697",
+    "obsidian": false,
+    "sasl": true,
+    "voice": false,
+    "icon": "server-icons/muncher.ico"
+  },
+  {
     "name": "zeolia.chat",
     "description": "French small network, #eggdrop and #linux :)",
     "wss": "wss://irc.zeolia.chat:8000",
