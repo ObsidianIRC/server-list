@@ -59,10 +59,10 @@
     "icon": "server-icons/ptirc-irc-network.png"
   },
   {
-    "name": "mIRCClub",
+    "name": "RusChat",
     "description": "We are more than just a server.",
-    "wss": "wss://irc.mirc.club:8000/",
-    "ircs": "ircs://irc.mirc.club:6697",
+    "wss": "wss://leras.ruschat.net/",
+    "ircs": "ircs://irc.ruschat.net:6697",
     "obsidian": false,
     "sasl": true,
     "voice": false
