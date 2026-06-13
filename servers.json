@@ -46,8 +46,7 @@
     "ircs": "ircs://irc.randomaccessmemory.download:6697",
     "obsidian": false,
     "sasl": true,
-    "voice": false,
-    "icon": "server-icons/muncher.ico"
+    "voice": false
   },
   {
     "name": "zeolia.chat",
